@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__标题__ · 孩子版</title>
+<style>
+  :root { --ink:#1f2a44; --accent:#1e5aa8; --soft:#f3f6fb; --line:#c9d3e3; }
+  * { box-sizing: border-box; }
+  body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; color: var(--ink); background:#fff; margin:0; padding:24px 16px; line-height:1.7; font-size:15px; }
+  .page { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 22px; margin:0 0 4px; }
+  .meta { color:#555; font-size:13px; margin-bottom:14px; }
+  .meta span { margin-right:18px; }
+  .tip { background: var(--soft); border-left: 4px solid var(--accent); padding: 8px 12px; margin: 10px 0 14px; font-size: 14px; }
+  h2 { font-size: 17px; color: var(--accent); margin: 22px 0 6px; border-bottom:1px solid var(--line); padding-bottom:4px; }
+  .req { font-size:13px; color:#444; margin: 2px 0 8px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(165px,1fr)); gap: 6px 14px; }
+  .grid div { padding: 2px 0; }
+  .cmp { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 6px 14px; margin-top:8px; }
+  .work { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; }
+  .work .box { border:1px dashed var(--line); min-height: 150px; padding:6px 8px; font-size:14px; }
+  .work .box small { display:block; color:#777; margin-top: 96px; }
+  pre { background: var(--soft); padding: 10px 14px; border-radius: 6px; font-size: 15px; line-height:1.5; }
+  ol { padding-left: 22px; }
+  .blank { display:inline-block; min-width: 56px; border-bottom:1px solid var(--ink); }
+  .blank.s { min-width: 32px; }
+  .line { border-bottom:1px solid var(--line); height: 26px; }
+  .answer { page-break-before: always; }
+  .answer h2 { color:#8a2e2e; }
+  @media print { body { padding: 0; } .noprint { display:none; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>__标题__</h1>
+<div class="meta"><span>姓名：________</span><span>日期：________</span><span>用时：____ 分钟（建议 30 分钟）</span><span>错题类型：__错因栏__</span></div>
+
+<div class="tip">
+<b>做题前先记住「三关」：</b>①口诀对不对 → ②进位加了没（乘得 0 或 10 的时候更要加！）→ ③相加对齐、加法也要进位。<br>
+<b>每道题算前先估、算后再比：</b>旁边写「大约 ___」。
+</div>
+
+<!-- 题目从这里开始：每题一个 <h2>第 N 题 标题</h2>，下面写要求和题目；竖式题用 <div class="work"><div class="box">(1) 57×42＝<small>大约：______</small></div></div> -->
+<h2>第 1 题 __标题__</h2>
+<div class="req">__要求__</div>
+<div class="grid"><div>__题目__</div></div>
+<!-- 题目到这里结束 -->
+<p class="req">做完后：自己先用「大约」检查一遍。错的题，说出「我错在第几关」。</p>
+</div></body></html>

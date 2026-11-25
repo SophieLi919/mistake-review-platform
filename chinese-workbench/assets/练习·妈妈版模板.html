@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__标题__ · 妈妈版</title>
+<style>
+  :root { --ink:#1f2a44; --accent:#1e5aa8; --soft:#f3f6fb; --line:#c9d3e3; }
+  * { box-sizing: border-box; }
+  body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; color: var(--ink); background:#fff; margin:0; padding:24px 16px; line-height:1.7; font-size:15px; }
+  .page { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 22px; margin:0 0 4px; }
+  .meta { color:#555; font-size:13px; margin-bottom:14px; }
+  .meta span { margin-right:18px; }
+  .tip { background: var(--soft); border-left: 4px solid var(--accent); padding: 8px 12px; margin: 10px 0 14px; font-size: 14px; }
+  h2 { font-size: 17px; color: var(--accent); margin: 22px 0 6px; border-bottom:1px solid var(--line); padding-bottom:4px; }
+  .req { font-size:13px; color:#444; margin: 2px 0 8px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(165px,1fr)); gap: 6px 14px; }
+  .grid div { padding: 2px 0; }
+  .cmp { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 6px 14px; margin-top:8px; }
+  .work { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; }
+  .work .box { border:1px dashed var(--line); min-height: 150px; padding:6px 8px; font-size:14px; }
+  .work .box small { display:block; color:#777; margin-top: 96px; }
+  pre { background: var(--soft); padding: 10px 14px; border-radius: 6px; font-size: 15px; line-height:1.5; }
+  ol { padding-left: 22px; }
+  .blank { display:inline-block; min-width: 56px; border-bottom:1px solid var(--ink); }
+  .blank.s { min-width: 32px; }
+  .line { border-bottom:1px solid var(--line); height: 26px; }
+  .answer { page-break-before: always; }
+  .answer h2 { color:#8a2e2e; }
+  @media print { body { padding: 0; } .noprint { display:none; } }
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  th,td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+  th{background:var(--soft);font-weight:600;white-space:nowrap}
+  td.q{white-space:nowrap;font-weight:600}
+  .tally td{height:30px}
+  .answer{page-break-before:always}
+</style>
+</head>
+<body><div class="page">
+<h1>__标题__ · 妈妈版</h1>
+<div class="meta"><span>对应卷子：__卷子__</span><span>孩子版共 __N__ 题，建议 __分钟__ 分钟</span></div>
+<div class="tip"><b>这份给妈妈看。</b>每道题练的是哪个易错点、提升的是课标里哪个维度、做的时候看什么。答案在最后一页。</div>
+
+<h2>每道题练什么</h2>
+<table>
+<tr><th>题</th><th>卷子上对应的错</th><th>练的易错点</th><th>提升的维度（课标）</th><th>做的时候看什么</th></tr>
+<!-- 每题一行 -->
+<tr><td class="q">第 1 题<br>__标题__</td><td>__对应的错__</td><td>__易错点__</td><td>__维度__</td><td>__看什么__</td></tr>
+</table>
+
+<h2>错误类型记录（做完后妈妈填）</h2>
+<p class="req">只记类型，不记分。连续记两周，看哪一类先消失。</p>
+<table class="tally">
+<tr><th>日期</th><!-- 按本次易错点改列名 --><th>__错因1__</th><th>__错因2__</th><th>__错因3__</th><th>备注</th></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<div class="answer">
+<h2>答案与陷阱位置</h2>
+<p><b>第 1 题</b>：__答案__。陷阱：__陷阱位置__。</p>
+</div>
+</div></body></html>

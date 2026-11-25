@@ -1,0 +1,582 @@
+<!-- generated: sophie-chinese-workbench-v1 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语文错题工作台</title>
+<style>
+:root{--paper:#f7f9fb;--grid:rgba(60,100,160,.09);--ink:#1b2a41;--soft:#5a6a80;--red:#c8302b;--red-bg:rgba(200,48,43,.10);--green:#2f7d4f;--green-bg:rgba(47,125,79,.12);--amber:#b8860b;--amber-bg:rgba(184,134,11,.14);--gold:#c99a10;--card:#fff;--line:#d6dde8;--mono:"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--paper:#141a22;--grid:rgba(120,160,220,.08);--ink:#e6ebf3;--soft:#a3afc2;--red:#ff6b61;--red-bg:rgba(255,107,97,.14);--green:#5fc48a;--green-bg:rgba(95,196,138,.16);--amber:#e3b341;--amber-bg:rgba(227,179,65,.16);--gold:#e3b341;--card:#1d2530;--line:#36404e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.7;padding:20px max(16px,env(safe-area-inset-left)) 60px max(16px,env(safe-area-inset-right))}
+.wrap{max-width:960px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:14px}
+h1{font-size:24px;margin:0;font-family:"Songti SC","Noto Serif SC",serif;font-weight:900}
+.tier{font-size:12px;border-radius:999px;padding:1px 9px;margin-left:6px;white-space:nowrap}
+.t-需巩固{background:var(--red-bg);color:var(--red)}.t-已具备{background:var(--green-bg);color:var(--green)}.t-未覆盖{background:var(--amber-bg);color:var(--amber)}
+.dim.l-未考察{border-left-color:var(--soft)}
+.built{font-size:12px;color:var(--soft)}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+nav button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;font-size:14px;cursor:pointer}
+nav button.on{border-color:var(--red);color:var(--red);font-weight:600}
+nav button.hi{border-color:var(--gold);color:var(--gold);font-weight:600}
+h2{font-size:18px;margin:22px 0 10px;font-family:"Songti SC","Noto Serif SC",serif}
+h3{font-size:15px;margin:0 0 6px}
+.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-items:start}
+.dim{border-left:4px solid var(--line);cursor:pointer;transition:box-shadow .15s ease,transform .15s ease}
+.dim:hover,.dim:focus-visible{box-shadow:0 3px 12px rgba(30,50,80,.12);outline:none}
+.dim .head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.dim .head h3{margin:0;font-size:15px;line-height:1.4}
+.dim .lv{font-size:12px;font-weight:600;white-space:nowrap;flex:none}
+.dim.l-扎实{border-left-color:var(--green)}.dim.l-基本掌握{border-left-color:var(--amber)}.dim.l-需加强{border-left-color:var(--red)}
+.dim.l-扎实 .lv{color:var(--green)}.dim.l-基本掌握 .lv{color:var(--amber)}.dim.l-需加强 .lv{color:var(--red)}.dim.l-未考察 .lv{color:var(--soft)}
+.dim .ev{font-size:13px;color:var(--soft);line-height:1.65;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.group{font-size:13px;color:var(--soft);margin:14px 0 6px;display:flex;align-items:center;gap:10px}.group::after{content:"";flex:1;height:1px;background:var(--line)}
+.pf{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;align-items:start}
+.pf .name{font-weight:600}
+.pf .tag{display:inline-block;font-size:11px;border-radius:999px;padding:0 8px;margin-left:6px;vertical-align:middle}
+.s-活跃{background:var(--red-bg);color:var(--red)}.s-减少{background:var(--amber-bg);color:var(--amber)}.s-消失{background:var(--green-bg);color:var(--green)}.s-历史{background:var(--line);color:var(--soft)}
+.tl{display:flex;flex-wrap:wrap;gap:4px}
+.tl span{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 6px;background:var(--paper)}
+.list a{display:block;padding:8px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+.list a:last-child{border-bottom:0}
+.list small{color:var(--soft);margin-left:8px}
+.note{max-width:720px}
+.note .meta{font-size:12px;color:var(--soft);font-family:var(--mono);margin-bottom:8px}
+.note img{max-width:100%;border-radius:6px;border:1px solid var(--line)}
+.note blockquote{border-left:3px solid var(--line);margin:8px 0;padding-left:10px;color:var(--soft)}
+.note table{border-collapse:collapse;font-size:13px;display:block;overflow-x:auto}
+.note td,.note th{border:1px solid var(--line);padding:4px 8px;vertical-align:top}
+.note a{color:var(--red)}
+.back{font-size:13px;color:var(--soft);cursor:pointer;margin-bottom:8px;display:inline-block}
+.empty{color:var(--soft);font-size:14px}
+.kv{font-size:13px;color:var(--soft)}
+/* 错题卡 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;align-items:start}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.qcard .qhead{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.qno{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--card);background:var(--ink);border-radius:5px;padding:1px 7px}
+.chip{font-size:11px;border-radius:999px;padding:2px 9px;background:var(--paper);border:1px solid var(--line);color:var(--soft)}
+.chip.pf{background:var(--amber-bg);color:var(--amber);border-color:transparent}
+.qphoto{width:100%;max-height:230px;object-fit:cover;object-position:top center;cursor:zoom-in;display:block;background:var(--paper);border-bottom:1px solid var(--line)}
+.qbody{padding:12px 14px;font-size:14px;flex:1}
+.qbody .stem{margin-bottom:10px;line-height:1.6}
+.ansline{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:13.5px}
+.ansline .lab{flex:none;font-weight:700;font-size:12px;padding:1px 6px;border-radius:4px}
+.wrong .lab{background:var(--red-bg);color:var(--red)}
+.right .lab{background:var(--green-bg);color:var(--green)}
+.wrong .txt{color:var(--red);text-decoration:line-through;text-decoration-thickness:1.5px}
+.right .txt{color:var(--green);font-weight:600}
+.qfoot{padding:8px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--soft);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.qfoot a{color:var(--red);text-decoration:none;cursor:pointer;font-weight:600}
+.nophoto{font-size:12px;color:var(--soft);padding:8px 14px;background:var(--paper);border-bottom:1px dashed var(--line)}
+/* 总览大厅 */
+.hall{padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+.hall-hi{font-size:19px;font-weight:700;font-family:"Songti SC","Noto Serif SC",serif}
+.hallgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:10px}
+.hallcard{border-radius:12px;padding:16px 18px;cursor:pointer;border:1px solid var(--line);background:var(--card);transition:transform .15s ease,box-shadow .15s ease}
+.hallcard:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(30,50,80,.12)}
+.hallcard .num{font-size:34px;font-weight:800;line-height:1.1}
+.hallcard .ttl{font-size:16px;font-weight:700;margin-top:2px}
+.hallcard .sub{font-size:12px;color:var(--soft);margin-top:4px}
+.hallcard.c-red .num,.hallcard.c-red .ttl{color:var(--red)}
+.hallcard.c-green .num,.hallcard.c-green .ttl{color:var(--green)}
+.hallcard.c-amber .num,.hallcard.c-amber .ttl{color:var(--amber)}
+.hallgrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.hallmini{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;font-size:14px}
+.hallmini:hover{border-color:var(--red)}
+.hallmini span{font-size:12px;color:var(--soft)}
+.cardacts{display:flex;align-items:center;gap:10px}
+.drillbtn,.linkbtn{border:1.5px solid var(--gold);background:var(--amber-bg);color:var(--gold);border-radius:7px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;min-height:32px}
+.drillbtn:hover,.linkbtn:hover{filter:brightness(1.08)}
+.linkbtn{margin-left:10px}
+/* 对标课标分组 */
+.stdsec{margin:18px 0 26px;scroll-margin-top:12px}
+.sh{font-size:16px;padding:8px 12px;border-radius:8px;border-left:5px solid transparent;background:var(--card);margin:0 0 10px}
+.sh.need{border-left-color:var(--red);color:var(--red)}
+.sh.strong{border-left-color:var(--green);color:var(--green)}
+.sh.blind{border-left-color:var(--amber);color:var(--amber)}
+.l-需巩固{border-left:5px solid var(--red)}
+.l-未覆盖{border-left:5px solid var(--amber)}
+/* 筛选与卷子图库 */
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:10px 0 6px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.filters label{font-size:13px;color:var(--soft);display:flex;align-items:center;gap:5px}
+.filters select{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13px;min-height:36px;max-width:180px}
+.chip.unit{background:rgba(60,100,160,.12);color:var(--ink);border-color:transparent}
+.chip.grade{background:var(--green-bg);color:var(--green);border-color:transparent}
+.papershots{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin:8px 0 16px}
+.paperfig{margin:0;min-width:0}
+.papershot{width:100%;height:205px;object-fit:cover;object-position:top center;cursor:zoom-in;border-radius:8px;border:1px solid var(--line);display:block;background:var(--paper)}
+.paperfig figcaption{font-size:11px;color:var(--soft);text-align:center;margin-top:4px;font-family:var(--mono)}
+/* 详情视图 */
+.detail{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.dhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.dhead h2{margin:0;font-size:19px;flex:1;min-width:180px;font-family:"Songti SC","Noto Serif SC",serif}
+.qno.pf{background:var(--amber)}
+.dtags{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.dtags .chip{font-size:11.5px}
+.dans{padding:14px 16px}
+.dstem{font-size:15px;font-weight:600;line-height:1.6;margin-bottom:10px}
+.dbody{padding:14px 16px;font-size:14px}
+.dbody h3{font-size:15px;margin:12px 0 6px}
+.dbody ul{padding-left:20px}
+.dbody li{margin:4px 0}
+.dfull{border-top:1px solid var(--line)}
+.dfull>summary{cursor:pointer;padding:11px 16px;font-size:13px;color:var(--soft);background:var(--paper);user-select:none}
+.dfull[open]>summary{border-bottom:1px solid var(--line)}
+/* 看板 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:8px}
+.stat .num{font-size:30px;font-weight:800;line-height:1.2}
+.stat .lbl{font-size:12px;color:var(--soft)}
+.bars{display:flex;flex-direction:column;gap:9px;margin:8px 0}
+.barrow{display:grid;grid-template-columns:120px 1fr 34px;gap:10px;align-items:center;font-size:13px}
+.barrow .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--soft)}
+.bartrack{background:var(--paper);border:1px solid var(--line);border-radius:999px;height:14px;overflow:hidden}
+.barfill{display:block;height:100%;background:linear-gradient(90deg,var(--amber),var(--red));border-radius:999px;min-width:3px;transition:width .5s ease}
+.barrow .ct{font-family:var(--mono);font-size:12px;text-align:right;color:var(--soft)}
+.rank{display:flex;flex-direction:column;gap:6px}
+.rankrow{display:flex;align-items:center;gap:10px;font-size:13.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.rankno{font-family:var(--mono);font-size:12px;font-weight:700;width:22px;height:22px;flex:none;border-radius:50%;background:var(--paper);color:var(--soft);display:flex;align-items:center;justify-content:center}
+.rankrow:nth-child(1) .rankno{background:var(--red);color:#fff}
+.rankrow:nth-child(2) .rankno{background:var(--amber);color:#fff}
+.rankrow:nth-child(3) .rankno{background:var(--green);color:#fff}
+.rankbar{flex:1;height:7px;background:var(--paper);border-radius:999px;overflow:hidden}
+.rankbar i{display:block;height:100%;background:var(--red);border-radius:999px}
+.ai-diag{border-left:4px solid var(--amber);background:var(--amber-bg);border-radius:0 10px 10px 0;padding:12px 16px;font-size:14px;line-height:1.7}
+.timeline{position:relative;padding-left:18px;margin:8px 0}
+.timeline::before{content:"";position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.tlitem{position:relative;padding:6px 0;font-size:13.5px}
+.tlitem::before{content:"";position:absolute;left:-16px;top:12px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid var(--card)}
+.tlitem .d{font-family:var(--mono);font-size:11px;color:var(--soft);margin-right:8px}
+/* 闯关 */
+.gamewrap{max-width:640px;margin:0 auto;text-align:center}
+.skillpick{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.skillbtn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:14px;cursor:pointer;min-height:48px}
+.skillbtn.on{border-color:var(--gold);background:var(--amber-bg);font-weight:700;color:var(--gold)}
+.stars{color:var(--gold);font-size:12px;letter-spacing:1px}
+.dots{display:flex;gap:9px;justify-content:center;margin:14px 0}
+.dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);transition:all .25s ease}
+.dot.lit{background:var(--gold);border-color:var(--gold);transform:scale(1.18);box-shadow:0 0 0 4px var(--amber-bg)}
+.gq{font-size:19px;font-weight:700;line-height:1.6;margin:18px 0 20px;min-height:56px}
+.opts{display:flex;flex-direction:column;gap:10px;margin:0 auto;max-width:480px}
+.opt{min-height:48px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:12px 16px;font-size:15px;cursor:pointer;transition:all .15s ease;text-align:left}
+.opt:hover:not(:disabled){border-color:var(--gold);transform:translateY(-1px)}
+.opt.correct{background:var(--green-bg);border-color:var(--green);color:var(--green);font-weight:700}
+.opt.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.why{margin:16px auto 0;max-width:520px;text-align:left;border-radius:10px;padding:0 14px;overflow:hidden;background:var(--red-bg);border:1px solid var(--red);max-height:0;opacity:0;transition:max-height .3s ease,opacity .3s ease,padding .3s ease}
+.why.show{max-height:260px;opacity:1;padding:12px 14px}
+.why .wt{font-weight:700;color:var(--red);font-size:13px;margin-bottom:4px}
+.why .wb{font-size:13.5px;line-height:1.65}
+.gmeta{font-size:12px;color:var(--soft);margin-top:16px}
+.modal{position:fixed;inset:0;background:rgba(10,20,35,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.show{display:flex}
+.modal .box{background:var(--card);border-radius:16px;padding:28px 30px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal .big{font-size:34px;color:var(--gold);font-weight:900;margin:4px 0}
+.modal .row{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.btn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:9px;padding:9px 16px;font-size:14px;cursor:pointer;min-height:44px}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#1b2a41;font-weight:700}
+.lightbox{position:fixed;inset:0;background:rgba(8,14,24,.9);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;cursor:zoom-out}
+.lightbox.show{display:flex}
+.lightbox img{max-width:100%;max-height:94vh;border-radius:6px;box-shadow:0 10px 50px rgba(0,0,0,.5)}
+@media (max-width:600px){
+  body{padding:14px 12px 50px;font-size:14px}
+  h1{font-size:20px}
+  header{gap:4px 10px}
+  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{flex:none;white-space:nowrap;padding:7px 14px;min-height:40px;font-size:13px}
+  .pf{grid-template-columns:1fr}
+  .barrow{grid-template-columns:74px 1fr 26px;gap:6px;font-size:12px}
+  .qno{font-size:11px}
+  .cards{grid-template-columns:1fr;gap:10px}
+  .grid{grid-template-columns:1fr}
+  .card{padding:12px}
+  .stat .num{font-size:26px}
+  .dhead{padding:12px}
+  .dhead h2{font-size:17px;min-width:120px}
+  .dbody{padding:12px}
+  .gq{font-size:17px}
+  .opt{padding:11px 13px;font-size:14px}
+  .modal .box{padding:22px 18px}
+  .rankrow{font-size:12px}
+  .sh{font-size:15px}
+  .filters{padding:8px;gap:6px 10px}
+  .filters select{min-height:40px;font-size:14px;max-width:calc(50vw - 24px)}
+  .papershots{grid-template-columns:repeat(2,1fr)}
+  .papershot{height:150px}
+  .hallgrid,.hallgrid2{grid-template-columns:1fr}
+  .hallcard .num{font-size:28px}
+  .hallmini{padding:11px 12px;flex-wrap:wrap;gap:2px}
+  .hallmini span{font-size:11px;width:100%;text-align:left}
+  .cardacts{flex-wrap:wrap;justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1 id="title">语文错题工作台</h1><span class="built" id="built"></span></header>
+<nav id="nav"></nav>
+<main id="main"></main>
+</div>
+<script id="payload" type="application/json">__WORKBENCH_PAYLOAD__</script>
+<div class="lightbox" id="lightbox"><img id="lbimg" alt=""></div>
+<div class="modal" id="modal"><div class="box" id="modalbox"></div></div>
+<script>
+(function(){
+  const data = JSON.parse(document.getElementById('payload').textContent);
+  const notes = data.notes, images = data.images || {}, quiz = data.quiz || [];
+  const byKey = {}; notes.forEach(n => byKey[n.key] = n);
+  document.getElementById('title').textContent = data.title;
+  const pf=data.profile||{}; const pfs=[pf.child,pf.grade,pf.textbook].filter(Boolean).join(' · '); document.getElementById('built').textContent = (pfs?pfs+' · ':'') + '生成于 ' + data.builtAt.replace('T',' ');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const kinds = k => notes.filter(n => n.kind === k);
+  const byDate = (a,b) => (b.meta.date||b.meta.updated||'').localeCompare(a.meta.date||a.meta.updated||'');
+  const imgSrc = t => images[t] || t;
+
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/!\[\[([^\]|]+)(\|[^\]]*)?\]\]/g, (m,t)=>`<img src="${esc(imgSrc(t.trim()))}" alt="">`);
+    s = s.replace(/\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/g, (m,t,l)=>{const k=t.replace(/\.md$/,''); return byKey[k]?`<a href="#" data-note="${esc(k)}">${esc(l||byKey[k].title)}</a>`:esc(l||t);});
+    s = s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');
+    s = s.replace(/(https?:\/\/[^\s)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+  function md(body){
+    const lines = body.split('\n'); let out=[], i=0, list=null, table=null;
+    const flush=()=>{ if(list){out.push(`</${list}>`);list=null;} if(table){out.push('</table>');table=null;} };
+    while(i<lines.length){
+      const l=lines[i];
+      if(/^\s*$/.test(l)){flush();i++;continue;}
+      let m;
+      if((m=l.match(/^(#{1,4})\s+(.*)/))){flush();const h=m[1].length;out.push(`<h${h+1}>${inline(m[2])}</h${h+1}>`);i++;continue;}
+      if(/^\s*\|/.test(l)){ if(!table){flush();table=true;out.push('<table>');} if(/^\s*\|\s*-/.test(l)){i++;continue;} const cells=l.trim().replace(/^\||\|$/g,'').split('|'); out.push('<tr>'+cells.map(c=>`<td>${inline(c.trim())}</td>`).join('')+'</tr>'); i++; continue;}
+      if((m=l.match(/^\s*[-*]\s+(.*)/))){ if(list!=='ul'){flush();list='ul';out.push('<ul>');} out.push(`<li>${inline(m[1])}</li>`); i++; continue;}
+      if((m=l.match(/^\s*\d+[.、]\s+(.*)/))){ if(list!=='ol'){flush();list='ol';out.push('<ol>');} out.push(`<li>${inline(m[1])}</li>`); i++; continue;}
+      if((m=l.match(/^>\s?(.*)/))){flush();out.push(`<blockquote>${inline(m[1])}</blockquote>`);i++;continue;}
+      flush(); out.push(`<p>${inline(l)}</p>`); i++;
+    }
+    flush(); return out.join('\n');
+  }
+
+  const tabs = [['总览',overview],['错题卡',cards],['看板',dashboard],['闯关 ⭐',game],['对标课标',standards],['卷子',()=>listing('卷子')],['练习',()=>listing('练习')]];
+  const nav = document.getElementById('nav');
+  tabs.forEach(([name])=>{const b=document.createElement('button');b.textContent=name;if(name.indexOf('闯关')===0)b.className='hi';b.onclick=()=>go({tab:name});nav.appendChild(b);});
+
+  function overview(){
+    const pf=data.profile||{};
+    let h=`<div class="hall"><div class="hall-hi">${esc(pf.child||'孩子')} · ${esc(pf.grade||'')} · ${esc(pf.textbook||'')}</div><p class="kv">这里是入口。点数字卡直接跳到「对标课标」对应那一组。</p></div>`;
+    const act=kinds('易错点').filter(p=>p.meta.status==='活跃'||p.meta.status==='减少').length;
+    const strong=kinds('维度').filter(d=>d.meta.level==='扎实'||d.meta.level==='基本掌握').length;
+    const blinds=kinds('盲区').length;
+    h+='<div class="hallgrid">'
+      +`<div class="hallcard c-red" data-tab="对标课标" data-grp="need"><div class="num">${act}</div><div class="ttl">需巩固</div><div class="sub">看需补的能力点 →</div></div>`
+      +`<div class="hallcard c-green" data-tab="对标课标" data-grp="strong"><div class="num">${strong}</div><div class="ttl">已具备</div><div class="sub">看已具备的 →</div></div>`
+      +`<div class="hallcard c-amber" data-tab="对标课标" data-grp="blind"><div class="num">${blinds}</div><div class="ttl">未覆盖</div><div class="sub">看卷子没考的 →</div></div>`
+      +'</div>';
+    h+='<div class="hallgrid2">'
+      +`<div class="hallmini" data-tab="错题卡"><b>错题卡</b><span>${kinds('错题').length} 张 · 按年级单元筛 →</span></div>`
+      +`<div class="hallmini" data-tab="闯关 ⭐"><b>闯关 ⭐</b><span>连对3题通关 →</span></div>`
+      +`<div class="hallmini" data-tab="看板"><b>看板</b><span>错因分布 · 排行榜 →</span></div>`
+      +`<div class="hallmini" data-tab="卷子"><b>卷子</b><span>原卷照片按单元 →</span></div>`
+      +'</div>';
+    const todo=kinds('练习').filter(p=>p.meta.status==='待作答');
+    h+='<h2>待作答练习</h2>'+(todo.length?`<div class="card list">${todo.map(linkRow).join('')}</div>`:'<p class="empty">没有待作答的练习。</p>');
+    return h;
+  }
+  function dimCard(n, cls, extra){
+    const ev=n.body.split('\n').filter(x=>x.trim()&&!/^#/.test(x)).map(x=>x.replace(/^\s*[-*]\s+/,'')).slice(0,2).join(' ');
+    return `<div class="card dim ${cls}" data-note="${esc(n.key)}" role="link" tabindex="0"><div class="head"><h3>${esc(n.meta.name||n.meta.dimension||n.title)}</h3>${extra}</div><div class="ev">${inline(ev)}</div></div>`;
+  }
+  function standards(){
+    const all=kinds('易错点').sort((a,b)=>(b.meta.last_seen||'').localeCompare(a.meta.last_seen||''));
+    const dims=kinds('维度').filter(d=>d.meta.level==='扎实'||d.meta.level==='基本掌握').sort(byDate);
+    const blinds=kinds('盲区').sort((a,b)=>(a.meta.task_group||'').localeCompare(b.meta.task_group||''));
+    let h='<h2>对标课标 · 能力核查</h2><p class="kv">拿 2022 课标这把尺子量孩子：红色是还需补的，绿色是已具备的，黄色是这几套卷没考到的角落。点方块看详情。这里跨单元累积，不按单元切；按单元看请去错题卡 / 卷子。</p>';
+    const secs={};
+    secs.need=`<section id="sec-need" class="stdsec"><h3 class="sh need">需巩固 <span class="kv">${all.length} 项</span></h3>`
+      +(all.length?`<div class="grid">${all.map(p=>dimCard(p,'l-需巩固',`<span class="tag s-${esc(p.meta.status)}">${esc(p.meta.status)}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
+    secs.strong=`<section id="sec-strong" class="stdsec"><h3 class="sh strong">已具备 <span class="kv">${dims.length} 项</span></h3>`
+      +(dims.length?`<div class="grid">${dims.map(d=>dimCard(d,'l-'+esc(d.meta.level),`<span class="lv">${esc(d.meta.level)}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
+    secs.blind=`<section id="sec-blind" class="stdsec"><h3 class="sh blind">未覆盖 <span class="kv">${blinds.length} 项</span></h3><p class="kv">不是孩子做错了，是这几套卷照不到的角落。要不要补、怎么补，由家长定。</p>`
+      +(blinds.length?`<div class="grid">${blinds.map(b=>dimCard(b,'l-未覆盖',`<span class="tag t-未覆盖">${esc(b.meta.task_group||'')}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
+    const order=['need','strong','blind'];
+    if(state.grp && order.includes(state.grp)){ order.splice(order.indexOf(state.grp),1); order.unshift(state.grp); }
+    return h+order.map(k=>secs[k]).join('');
+  }
+  function linkRow(n){ const m=n.meta; const extra=[m.date||m.updated,m.grade,m.unit,m.status].filter(Boolean).join(' · '); return `<a href="#" data-note="${esc(n.key)}">${esc(n.title)}<small>${esc(extra)}</small></a>`; }
+  function unitOfImage(t){
+    const s=String(t);
+    if(/期中/.test(s)) return '期中';
+    const m=s.match(/([一二三四五六七八\d]+)单元/);
+    if(m){ let v=m[1]; const map={'1':'一','2':'二','3':'三','4':'四','5':'五','6':'六','7':'七','8':'八'}; v=map[v]||v; return '第'+v+'单元'; }
+    return '其他';
+  }
+  const viewFilter={grade:'',unit:''};
+  function filterBar(items){
+    const grades=[...new Set(items.map(n=>n.meta.grade).filter(Boolean))];
+    const gu={}; items.forEach(n=>{ const g=n.meta.grade||'未标年级',u=n.meta.unit||'未标单元';(gu[g]=gu[g]||new Set()).add(u); });
+    let f='<div class="filters"><span class="kv">筛选</span>';
+    f+='<label>年级 <select data-vfilter="grade"><option value="">全部年级</option>'+grades.map(g=>`<option value="${esc(g)}"${viewFilter.grade===g?' selected':''}>${esc(g)}</option>`).join('')+'</select></label>';
+    f+='<label>单元 <select data-vfilter="unit"><option value="">全部单元</option>'+Object.keys(gu).map(g=>`<optgroup label="${esc(g)}">`+[...gu[g]].sort().map(u=>`<option value="${esc(u)}"${viewFilter.unit===u?' selected':''}>${esc(u)}</option>`).join('')+'</optgroup>').join('')+'</select></label>';
+    return f+'</div>';
+  }
+  function matchFilter(n){ return (!viewFilter.grade||n.meta.grade===viewFilter.grade)&&(!viewFilter.unit||n.meta.unit===viewFilter.unit); }
+  function paperGallery(){
+    const entries=Object.keys(images).filter(t=>/\.(jpg|jpeg|png|webp)/i.test(t));
+    const allNotes=kinds('卷子');
+    const groups={};
+    entries.forEach(t=>{ const u=unitOfImage(t); (groups[u]=groups[u]||[]).push(t); });
+    const order=['期中','第一单元','第二单元','第三单元','第四单元','第五单元','第六单元','第七单元','第八单元','其他'];
+    let h='<h2>卷子 · 原卷照片</h2><p class="kv">按年级 + 单元分组，点图片放大看清晰原卷。原卷只放这里，错题卡上不重复。</p>';
+    h+=filterBar(allNotes.length?allNotes:[{meta:{grade:''}}]);
+    const keys=Object.keys(groups).sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+    if(!keys.length) return h+'<p class="empty">还没有上传原卷照片。用 media 命令把试卷照片存进附件。</p>';
+    const grade=viewFilter.grade||'';
+    keys.forEach(u=>{
+      if(viewFilter.unit && u!==viewFilter.unit) return;
+      h+=`<h3>${esc(grade?grade+' · ':'')}${esc(u)} <span class="kv">${groups[u].length} 张</span></h3><div class="papershots">`;
+      groups[u].sort().forEach(t=>{ const nm=t.split('/').pop(); h+=`<figure class="paperfig"><img class="papershot zoom" src="${esc(imgSrc(t))}" alt="${esc(nm)}" data-zoom="1"><figcaption>${esc(nm)}</figcaption></figure>`; });
+      h+='</div>';
+    });
+    const papers=allNotes.filter(matchFilter).sort(byDate);
+    if(papers.length) h+='<h3>卷子分析笔记</h3><div class="card list">'+papers.map(linkRow).join('')+'</div>';
+    return h;
+  }
+  function listing(kind){
+    if(kind==='卷子') return paperGallery();
+    const items=kinds(kind).sort(byDate);
+    let h=`<h2>${kind}</h2>`;
+    if(kind==='练习'&&items.length){
+      h+=filterBar(items);
+      const shown=items.filter(matchFilter);
+      h+=shown.length?`<div class="card list">${shown.map(linkRow).join('')}</div>`:'<p class="empty">这个筛选条件下没有练习。</p>';
+      h+='<p class="kv">做完的练习也留在这里当题型库，下个单元考或期末复习时可以调出来参考出题。</p>';
+      return h;
+    }
+    return h+(items.length?`<div class="card list">${items.map(linkRow).join('')}</div>`:'<p class="empty">还没有记录。</p>');
+  }
+  const META_LABEL={id:'编号',name:'名称',subject:'学科',grade:'年级',unit:'单元',date:'日期',updated:'更新',status:'状态',dimension:'维度',cause:'错因',tier:'层级',pitfalls:'易错点',paper:'卷子',first_seen:'首见',last_seen:'最近',source:'课标依据',task_group:'任务群',level:'程度',group:'组别',image:'原图',skill:'技能'};
+  function dchips(n, keys){
+    return (keys||Object.keys(n.meta)).filter(k=>n.meta[k]!==undefined&&n.meta[k]!=='').map(k=>`<span class="chip">${esc(META_LABEL[k]||k)} · ${esc(n.meta[k])}</span>`).join('');
+  }
+  function detailWrong(n){
+    const m=n.meta;
+    const pfTags=(m.pitfalls||'').split(/[,，、]\s*/).filter(Boolean).map(x=>`<span class="chip pf">${esc(pfNameOf(x))}</span>`).join('');
+    let h='<div class="detail">';
+    h+=`<div class="dhead"><span class="qno">${esc(m.id||'CT')}</span><h2>${esc(n.title)}</h2></div>`;
+    h+=`<div class="dtags"><span class="chip grade">${esc(m.grade||'')}</span><span class="chip unit">${esc(m.unit||'未标单元')}</span>${dchips(n,['cause','date','status'])}${pfTags}</div>`;
+    h+='<div class="dans">';
+    if(m.q) h+=`<div class="dstem">${esc(m.q)}</div>`;
+    if(m.wrong) h+=`<div class="ansline wrong"><span class="lab">错答</span><span class="txt">${esc(m.wrong)}</span></div>`;
+    if(m.right) h+=`<div class="ansline right"><span class="lab">正答</span><span class="txt">${esc(m.right)}</span></div>`;
+    h+='</div>';
+    // 完整分析只保留错题卡没有的：反思条、老师批改、下一步。跳过重复的「原题与孩子的答案」「正确写法」
+    const secs=n.body.split(/^## /m).slice(1);
+    const keep=secs.filter(s=>/反思条|老师红笔|下一步/.test(s)).map(s=>'## '+s);
+    if(keep.length){
+      h+=`<details class="dfull"><summary>孩子的反思 · 错因 · 下一步</summary><div class="dbody">${md(keep.join('\n'))}</div></details>`;
+    }
+    h+='</div>';
+    return h;
+  }
+  function detailPf(n){
+    const m=n.meta;
+    let h='<div class="detail">';
+    h+=`<div class="dhead"><span class="qno pf">${esc(m.id||'PF')}</span><h2>${esc(m.name||n.title)}</h2><span class="tag s-${esc(m.status)}">${esc(m.status)}</span></div>`;
+    h+=`<div class="dtags">${dchips(n,['dimension','cause','tier','first_seen','last_seen'])}</div>`;
+    h+=`<div class="dbody">${md(n.body)}</div>`;
+    return h+'</div>';
+  }
+  function detailGeneric(n){
+    const skip=new Set(['schema','kind','key']);
+    const keys=Object.keys(n.meta).filter(k=>!skip.has(k));
+    let h='<div class="detail">';
+    h+=`<div class="dhead"><h2>${esc(n.title)}</h2></div>`;
+    h+=`<div class="dtags">${dchips(n,keys)}</div>`;
+    h+=`<div class="dbody">${md(n.body)}</div>`;
+    return h+'</div>';
+  }
+  function noteView(key){
+    const n=byKey[key]; if(!n) return '<p class="empty">没有这条笔记。</p>';
+    let h='<span class="back" data-back="1">← 返回</span>';
+    if(n.kind==='错题') h+=detailWrong(n);
+    else if(n.kind==='易错点') h+=detailPf(n);
+    else h+=detailGeneric(n);
+    return h;
+  }
+
+  function findPhoto(n){
+    if(n.meta.image) return n.meta.image;
+    const m = n.body.match(/!\[\[([^\]|]+)/);
+    if(m && /\.(jpg|jpeg|png|webp)/i.test(m[1])) return m[1].trim();
+    if(n.meta.paper){
+      const paper = notes.find(x=>x.meta.id===n.meta.paper);
+      if(paper){ const pm = paper.body.match(/!\[\[([^\]|]+)/); if(pm && /\.(jpg|jpeg|png|webp)/i.test(pm[1])) return pm[1].trim(); }
+    }
+    const anyPaper = kinds('卷子')[0];
+    if(anyPaper){ const pm = anyPaper.body.match(/!\[\[([^\]|]+)/); if(pm && /\.(jpg|jpeg|png|webp)/i.test(pm[1])) return pm[1].trim(); }
+    return null;
+  }
+  function pfNameOf(id){ const p=notes.find(x=>x.meta.id===id||x.meta.name===id); return p?p.meta.name:id; }
+  const cardFilter={grade:'',unit:''};
+  function cards(){
+    const items = kinds('错题').sort(byDate);
+    if(!items.length) return '<h2>错题卡 · 错在哪一眼看清</h2><p class="empty">还没有错题笔记。整理卷子后，这里会变成一张张卡片。</p>';
+    const grades=[...new Set(items.map(n=>n.meta.grade).filter(Boolean))];
+    const gradeUnits={};
+    items.forEach(n=>{ const g=n.meta.grade||'未标年级', u=n.meta.unit||'未标单元'; (gradeUnits[g]=gradeUnits[g]||new Set()).add(u); });
+    let f='<div class="filters"><span class="kv">筛选</span>';
+    f+='<label>年级 <select data-filter="grade"><option value="">全部年级</option>'+grades.map(g=>`<option value="${esc(g)}"${cardFilter.grade===g?' selected':''}>${esc(g)}</option>`).join('')+'</select></label>';
+    f+='<label>单元 <select data-filter="unit"><option value="">全部单元</option>'+Object.keys(gradeUnits).map(g=>`<optgroup label="${esc(g)}">`+[...gradeUnits[g]].sort().map(u=>`<option value="${esc(u)}"${cardFilter.unit===u?' selected':''}>${esc(u)}</option>`).join('')+'</optgroup>').join('')+'</select></label>';
+    f+='</div>';
+    const shown=items.filter(n=>(!cardFilter.grade||n.meta.grade===cardFilter.grade)&&(!cardFilter.unit||n.meta.unit===cardFilter.unit));
+    let h = '<h2>错题卡 · 错在哪一眼看清</h2><p class="kv">错答红删除线、正答绿色；红字是错答内容，不是分数。原卷照片在「卷子」页按单元查看。</p>'+f+`<p class="kv">共 ${shown.length} 张卡</p><div class="cards">`;
+    shown.forEach(n=>{
+      const m=n.meta;
+      const q = m.q || n.title || '题目';
+      const pfTags = (m.pitfalls||'').split(/[,，、]\s*/).filter(Boolean).map(x=>`<span class="chip pf">${esc(pfNameOf(x))}</span>`).join('');
+      const cause = m.cause?`<span class="chip">${esc(m.cause)}</span>`:'';
+      const tags=`<span class="chip grade">${esc(m.grade||'')}</span><span class="chip unit">${esc(m.unit||'未标单元')}</span>`;
+      const wrong = m.wrong?`<div class="ansline wrong"><span class="lab">错答</span><span class="txt">${esc(m.wrong)}</span></div>`:'';
+      const right = m.right?`<div class="ansline right"><span class="lab">正答</span><span class="txt">${esc(m.right)}</span></div>`:'';
+      const qref=quiz.some(z=>z.ref===m.id)?`<button class="drillbtn" data-drill="${esc(m.id)}">练这题 ▶</button>`:'';
+      h += `<div class="qcard"><div class="qhead"><span class="qno">${esc(m.id||'CT')}</span>${tags}${cause}${pfTags}</div><div class="qbody"><div class="stem">${esc(q)}</div>${wrong}${right}</div><div class="qfoot"><span>${esc(m.date||'')}</span><span class="cardacts">${qref}<a href="#" data-note="${esc(n.key)}">完整分析 →</a></span></div></div>`;
+    });
+    return h+'</div>'+(shown.length?'':'<p class="empty">这个筛选条件下没有错题。</p>');
+  }
+
+  function dashboard(){
+    const wrongs = kinds('错题'), pf = kinds('易错点'), papers = kinds('卷子');
+    const causeCount = {}, pfCount = {};
+    wrongs.forEach(n=>{ const c=(n.meta.cause||'未分类').split('·')[0]; causeCount[c]=(causeCount[c]||0)+1; });
+    wrongs.forEach(n=>{ (n.meta.pitfalls||'').split(/[,，、]\s*/).filter(Boolean).forEach(x=>{ pfCount[x]=(pfCount[x]||0)+1; }); });
+    const causes = Object.entries(causeCount).sort((a,b)=>b[1]-a[1]);
+    const maxC = causes.length?causes[0][1]:1;
+    const kps = new Set(wrongs.map(n=>n.meta.cause).filter(Boolean)).size;
+    const active = pf.filter(p=>p.meta.status==='活跃'||p.meta.status==='减少');
+    let h = '<h2>看板 · 用数据看清弱在哪</h2><div class="stats">'
+      + `<div class="card stat"><div class="num" style="color:var(--red)">${wrongs.length}</div><div class="lbl">错题总数</div></div>`
+      + `<div class="card stat"><div class="num" style="color:var(--amber)">${kps}</div><div class="lbl">涉及知识点</div></div>`
+      + `<div class="card stat"><div class="num" style="color:var(--green)">${active.length}</div><div class="lbl">活跃易错点</div></div>`
+      + `<div class="card stat"><div class="num">${papers.length}</div><div class="lbl">已录卷子</div></div></div>`;
+    if(causes.length){
+      h += '<h3>错因分布</h3><div class="card"><div class="bars">';
+      causes.forEach(([nm,ct])=>{ h += `<div class="barrow"><span class="nm" title="${esc(nm)}">${esc(nm)}</span><span class="bartrack"><span class="barfill" style="width:${Math.round(ct/maxC*100)}%"></span></span><span class="ct">${ct}</span></div>`; });
+      h += '</div></div>';
+    }
+    const rank = Object.entries(pfCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    if(rank.length){
+      const mx=rank[0][1];
+      h += '<h3>易错点排行榜</h3><div class="rank">';
+      rank.forEach(([nm,ct],i)=>{ h += `<div class="rankrow"><span class="rankno">${i+1}</span><span style="flex:0 0 140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(pfNameOf(nm))}</span><span class="rankbar"><i style="width:${Math.round(ct/mx*100)}%"></i></span><span class="kv">${ct}</span></div>`; });
+      h += '</div>';
+    }
+    h += '<h3>错题时间线</h3>' + (wrongs.length?`<div class="card"><div class="timeline">${wrongs.slice(0,20).map(n=>`<div class="tlitem"><span class="d">${esc(n.meta.date||'')}</span><a href="#" data-note="${esc(n.key)}" style="color:inherit;text-decoration:none">${esc(n.title)}</a> <span class="kv">· ${esc(n.meta.cause||'')}</span></div>`).join('')}</div></div>`:'<p class="empty">还没有错题。</p>');
+    h += '<h3>一句话诊断</h3><div class="ai-diag">'+aiDiagnosis(causes,active,wrongs)+'</div>';
+    return h;
+  }
+  function aiDiagnosis(causes,active,wrongs){
+    if(!wrongs.length) return '还没有错题数据。整理卷子后，这里会给出一句"最该先补什么"的诊断。';
+    const top=causes[0];
+    const topActive=active.slice(0,2).map(p=>p.meta.name).join('、');
+    let s = top ? `「${esc(top[0])}」类错误最多（${top[1]}处），是最主要的失分区域。` : '错因较分散。';
+    if(topActive) s += ` 建议先抓 ${esc(topActive)} 这两条主线。`;
+    s += ' 数据来自口述确认的错题，不写分数，只看错在哪。';
+    return s;
+  }
+
+  let gstate = null;
+  let drillRef = null;
+  function game(){
+    if(!quiz.length) return '<h2>闯关 · 连对3题通关</h2><div class="card"><p class="empty">题库还没建。整理错题后，在档案里建「闯关题库.md」，这里就能开玩。<br>题目全部从真实错题长出来，不编新场景。</p></div>';
+    if(drillRef){
+      const qs=quiz.filter(q=>q.ref===drillRef);
+      const title=byKey[Object.keys(byKey).find(k=>byKey[k].meta.id===drillRef)]?.title||drillRef;
+      return `<h2>练这题 · ${esc(title)}</h2><div class="gamewrap"><p class="kv">针对这一道题的变式。答错会展开错因提醒，可反复练。<button class="linkbtn" data-alldril="1">← 回综合闯关</button></p><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div id="gqzone"></div><div class="why" id="gwhy"><div class="wt">为什么错</div><div class="wb" id="gwhyb"></div></div><div class="gmeta" id="gmeta"></div></div>`;
+    }
+    const skills = {};
+    quiz.forEach(q=>{ const k=q.skill||'综合'; (skills[k]=skills[k]||[]).push(q); });
+    let h = '<h2>闯关 · 连对3题通关</h2><div class="gamewrap"><p class="kv">挑一个坑开打（按课标易错点综合归类）。每题4选1，连对3题通关；答错清零重来。题目会反复抽，练多少次都行，不会"做完就没"。错题卡上的「练这题」可以只练单道。</p><div class="skillpick">';
+    Object.keys(skills).forEach((k,i)=>{ const stars='⭐'.repeat(Math.min(3,(skills[k][0]&&skills[k][0].level)||1)); h += `<button class="skillbtn${i===0?' on':''}" data-skill="${esc(k)}">${esc(k)}<br><span class="stars">${stars}</span></button>`; });
+    h += '</div><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div id="gqzone"><p class="empty">点上面的坑，开始闯关 →</p></div><div class="why" id="gwhy"><div class="wt">为什么错</div><div class="wb" id="gwhyb"></div></div><div class="gmeta" id="gmeta"></div></div>';
+    return h;
+  }
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function startGame(skill){
+    const pool = drillRef ? shuffle(quiz.filter(q=>q.ref===drillRef)) : shuffle(quiz.filter(q=>(q.skill||'综合')===skill));
+    gstate = {pool:pool, i:0, streak:0, total:0, correct:0, skill:skill, locked:false};
+    document.querySelectorAll('.skillbtn').forEach(b=>b.classList.toggle('on',b.dataset.skill===skill));
+    document.getElementById('gwhy').classList.remove('show');
+    renderQuestion();
+  }
+  function renderQuestion(){
+    if(!gstate) return;
+    const s=gstate;
+    if(s.streak>=3 || (s.i>=s.pool.length && !drillRef)){ showPass(); return; }
+    if(drillRef && s.i>=s.pool.length) s.i=0;
+    const q=s.pool[s.i];
+    const opts=shuffle(q.opts.map((text,idx)=>({text:text,ok:idx===q.a})));
+    const zone=document.getElementById('gqzone');
+    zone.innerHTML = `<div class="gq">${esc(q.q)}</div><div class="opts">${opts.map((o,i)=>`<button class="opt" data-ok="${o.ok?1:0}" data-i="${i}">${String.fromCharCode(65+i)}. ${esc(o.text)}</button>`).join('')}</div>`;
+    s.locked=false;
+    document.getElementById('gmeta').textContent=`第 ${s.i+1} / ${s.pool.length} 题 · 已连对 ${s.streak}/3`;
+    paintDots();
+  }
+  function paintDots(){ document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('lit', i<(gstate?gstate.streak:0))); }
+  function answer(btn){
+    if(!gstate||gstate.locked) return;
+    const s=gstate, ok=btn.dataset.ok==='1';
+    s.locked=true; s.total++;
+    document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+    if(ok){ btn.classList.add('correct'); s.correct++; s.streak++; }
+    else { btn.classList.add('wrong'); s.streak=0; const right=document.querySelector('.opt[data-ok="1"]'); if(right) right.classList.add('correct');
+      const why=document.getElementById('gwhy'); document.getElementById('gwhyb').textContent=(s.pool[s.i].why||'再想想这一步。'); why.classList.add('show');
+    }
+    paintDots();
+    document.getElementById('gmeta').textContent=`第 ${s.i+1} / ${s.pool.length} 题 · 已连对 ${s.streak}/3 · 答对 ${s.correct}/${s.total}`;
+    setTimeout(()=>{ s.i++; renderQuestion(); }, ok?700:1900);
+  }
+  function showPass(){
+    const s=gstate, rate=s.total?Math.round(s.correct/s.total*100):100;
+    document.getElementById('gqzone').innerHTML=`<div style="padding:24px 0"><div class="big">🎉 通关</div><p>「${esc(s.skill)}」连对3题！共做 ${s.total} 题，正确率 ${rate}%</p></div>`;
+    document.getElementById('gwhy').classList.remove('show');
+    document.getElementById('modalbox').innerHTML=`<h2>通关啦</h2><div class="big">${rate}%</div><p>共 ${s.total} 题，答对 ${s.correct} 题<br>「${esc(s.skill)}」连对3题通关</p><div class="row"><button class="btn" id="magain">再练一组</button><button class="btn primary" id="mclose">收下</button></div>`;
+    document.getElementById('modal').classList.add('show');
+    document.getElementById('magain').onclick=()=>{ document.getElementById('modal').classList.remove('show'); startGame(s.skill); };
+    document.getElementById('mclose').onclick=()=>{ document.getElementById('modal').classList.remove('show'); go({tab:'闯关 ⭐'}); };
+  }
+
+  const state={tab:'总览',note:null,stack:[],grp:''};
+  function go(next){ if(next.note){ state.stack.push({tab:state.tab,note:state.note}); state.note=next.note; } else { state.tab=next.tab||'总览'; state.grp=next.grp||''; state.note=null; state.stack=[]; } try{ history.replaceState(null,'', state.note?'#note='+encodeURIComponent(state.note):'#tab='+encodeURIComponent(state.tab)+(state.grp?'&grp='+encodeURIComponent(state.grp):'')); }catch(e){} render(); }
+  function back(){ const prev=state.stack.pop(); if(prev){ state.tab=prev.tab; state.note=prev.note; } else { state.note=null; } render(); }
+  document.addEventListener('click', e=>{
+    const zoom=e.target.closest('[data-zoom]'); if(zoom){ document.getElementById('lbimg').src=zoom.src; document.getElementById('lightbox').classList.add('show'); return; }
+    if(e.target.closest('#lightbox')){ document.getElementById('lightbox').classList.remove('show'); return; }
+    const opt=e.target.closest('.opt'); if(opt){ answer(opt); return; }
+    const dz=e.target.closest('[data-drill]'); if(dz){ drillRef=dz.dataset.drill; go({tab:'闯关 ⭐'}); startGame(drillRef); return; }
+    const da=e.target.closest('[data-alldril]'); if(da){ drillRef=null; render(); return; }
+    const sk=e.target.closest('.skillbtn'); if(sk){ startGame(sk.dataset.skill); return; }
+    const a=e.target.closest('[data-note],[data-tab],[data-grp],[data-back]'); if(!a) return; e.preventDefault(); if(a.dataset.back) back(); else if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab});
+  });
+  document.addEventListener('change', e=>{
+    const f=e.target.closest('[data-filter]'); if(!f) return;
+    cardFilter[f.dataset.filter]=f.value; render();
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ document.getElementById('lightbox').classList.remove('show'); document.getElementById('modal').classList.remove('show'); } if(e.key!=='Enter'&&e.key!==' ') return; const a=e.target.closest('[data-note],[data-tab],[data-grp]'); if(!a) return; e.preventDefault(); if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab}); });
+  function render(){
+    const main=document.getElementById('main');
+    [...nav.children].forEach(b=>b.classList.toggle('on', b.textContent===state.tab && !state.note));
+    if(state.note){ main.innerHTML=noteView(state.note); window.scrollTo(0,0); return; }
+    const t = tabs.find(x=>x[0]===state.tab) || tabs[0];
+    main.innerHTML = t[1]();
+    if(state.grp && !state.note) window.scrollTo(0,0);
+  }
+  (function(){ const h=location.hash.slice(1); h.split('&').forEach(p=>{const [k,v]=p.split('='); if(k==='tab') state.tab=decodeURIComponent(v||'总览'); if(k==='note') state.note=decodeURIComponent(v||''); if(k==='grp') state.grp=decodeURIComponent(v||'');}); })();
+  render();
+})();
+</script>
+</body>
+</html>
