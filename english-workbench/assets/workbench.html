@@ -161,6 +161,10 @@ h3{font-size:15px;margin:0 0 6px}
 .stars{color:var(--gold);font-size:12px;letter-spacing:1px}
 .dots{display:flex;gap:9px;justify-content:center;margin:14px 0}
 .dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);transition:all .25s ease}
+.tipbox{margin:10px 0;background:#fff8e1;border:1px solid #efd88a;border-radius:10px;padding:9px 12px;font-size:13.5px}
+.tipbox summary{cursor:pointer;font-weight:600;color:#8a6d00}
+.tipbody{margin-top:8px;color:#4a3f10;white-space:pre-line;line-height:1.8}
+.roundmsg{margin:8px 0;padding:9px 12px;background:#fdecea;border:1px solid #f0b9b4;border-radius:10px;font-size:13.5px;color:#8f2f28}
 .dot.lit{background:var(--gold);border-color:var(--gold);transform:scale(1.18);box-shadow:0 0 0 4px var(--amber-bg)}
 .gq{font-size:19px;font-weight:700;line-height:1.6;margin:18px 0 20px;min-height:56px}
 .opts{display:flex;flex-direction:column;gap:10px;margin:0 auto;max-width:480px}
@@ -516,13 +520,13 @@ h3{font-size:15px;margin:0 0 6px}
     if(drillRef){
       const qs=quiz.filter(q=>q.ref===drillRef);
       const title=byKey[Object.keys(byKey).find(k=>byKey[k].meta.id===drillRef)]?.title||drillRef;
-      return `<h2>练这题 · ${esc(title)}</h2><div class="gamewrap"><p class="kv">针对这一道题的变式。答错会展开错因提醒，可反复练。<button class="linkbtn" data-alldril="1">← 回综合闯关</button></p><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div id="gqzone"></div><div class="why" id="gwhy"><div class="wt">为什么错</div><div class="wb" id="gwhyb"></div></div><div class="gmeta" id="gmeta"></div></div>`;
+      return `<h2>练这题 · ${esc(title)}</h2><div class="gamewrap"><p class="kv">本题共有 ${qs.length} 道变式，答错会展开错因提醒，可反复练。${qs.length<2?'（题库暂只配了1道，想加变式告诉我）':''}<button class="linkbtn" data-alldril="1">← 回综合闯关</button></p><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div id="gqzone"></div><div class="why" id="gwhy"><div class="wt">为什么错</div><div class="wb" id="gwhyb"></div></div><div class="gmeta" id="gmeta"></div></div>`;
     }
     const skills = {};
     quiz.forEach(q=>{ const k=q.skill||'综合'; (skills[k]=skills[k]||[]).push(q); });
-    let h = '<h2>闯关 · 连对3题通关</h2><div class="gamewrap"><p class="kv">挑一个坑开打（按课标易错点综合归类）。每题4选1，连对3题通关；答错清零重来。题目会反复抽，练多少次都行，不会"做完就没"。错题卡上的「练这题」可以只练单道。</p><div class="skillpick">';
+    let h = '<h2>闯关 · 连对3题通关</h2><div class="gamewrap"><p class="kv">挑一个方块开打（按课标易错点综合归类）。每题4选1，连对3题通关；答错清零重来。题目会反复抽，练多少次都行，不会"做完就没"。错题卡上的「练这题」可以只练单道。</p><div class="skillpick">';
     Object.keys(skills).forEach((k,i)=>{ const stars='⭐'.repeat(Math.min(3,(skills[k][0]&&skills[k][0].level)||1)); h += `<button class="skillbtn${i===0?' on':''}" data-skill="${esc(k)}">${esc(k)}<br><span class="stars">${stars}</span></button>`; });
-    h += '</div><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div id="gqzone"><p class="empty">点上面的坑，开始闯关 →</p></div><div class="why" id="gwhy"><div class="wt">为什么错</div><div class="wb" id="gwhyb"></div></div><div class="gmeta" id="gmeta"></div></div>';
+    h += '</div><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div id="gqzone"><p class="empty">点上面的方块，开始闯关 →</p></div><div class="why" id="gwhy"><div class="wt">为什么错</div><div class="wb" id="gwhyb"></div></div><div class="gmeta" id="gmeta"></div></div>';
     return h;
   }
   function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -536,14 +540,19 @@ h3{font-size:15px;margin:0 0 6px}
   function renderQuestion(){
     if(!gstate) return;
     const s=gstate;
-    if(s.streak>=3 || (s.i>=s.pool.length && !drillRef)){ showPass(); return; }
-    if(drillRef && s.i>=s.pool.length) s.i=0;
+    if(s.streak>=3){ showPass(); return; }
+    if(s.i>=s.pool.length){
+      if(drillRef){ s.i=0; }
+      else { s.pool=shuffle(s.pool); s.i=0; s.round=(s.round||1)+1; s.msg='这一轮把题都过完了，但还没连对3题——不算通关哦，换个顺序再来！'; }
+    }
     const q=s.pool[s.i];
     const opts=shuffle(q.opts.map((text,idx)=>({text:text,ok:idx===q.a})));
     const zone=document.getElementById('gqzone');
-    zone.innerHTML = `<div class="gq">${esc(q.q)}</div><div class="opts">${opts.map((o,i)=>`<button class="opt" data-ok="${o.ok?1:0}" data-i="${i}">${String.fromCharCode(65+i)}. ${esc(o.text)}</button>`).join('')}</div>`;
+    const tipHtml=q.tip?`<details class="tipbox"><summary>📖 ${esc(q.tipTitle||'小抄 · 点开看判断方法')}</summary><div class="tipbody">${esc(q.tip)}</div></details>`:'';
+    zone.innerHTML = `<div class="gq">${esc(q.q)}</div>${tipHtml}<div class="opts">${opts.map((o,i)=>`<button class="opt" data-ok="${o.ok?1:0}" data-i="${i}">${String.fromCharCode(65+i)}. ${esc(o.text)}</button>`).join('')}</div>`;
+    if(s.msg){ zone.insertAdjacentHTML('afterbegin', `<div class="roundmsg">${esc(s.msg)}</div>`); s.msg=''; }
     s.locked=false;
-    document.getElementById('gmeta').textContent=`第 ${s.i+1} / ${s.pool.length} 题 · 已连对 ${s.streak}/3`;
+    document.getElementById('gmeta').textContent=(s.round>1?`第${s.round}轮 · `:'')+`第 ${s.i+1} / ${s.pool.length} 题 · 已连对 ${s.streak}/3`;
     paintDots();
   }
   function paintDots(){ document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('lit', i<(gstate?gstate.streak:0))); }
@@ -557,7 +566,7 @@ h3{font-size:15px;margin:0 0 6px}
       const why=document.getElementById('gwhy'); document.getElementById('gwhyb').textContent=(s.pool[s.i].why||'再想想这一步。'); why.classList.add('show');
     }
     paintDots();
-    document.getElementById('gmeta').textContent=`第 ${s.i+1} / ${s.pool.length} 题 · 已连对 ${s.streak}/3 · 答对 ${s.correct}/${s.total}`;
+    document.getElementById('gmeta').textContent=(s.round>1?`第${s.round}轮 · `:'')+`第 ${s.i+1} / ${s.pool.length} 题 · 已连对 ${s.streak}/3 · 答对 ${s.correct}/${s.total}`;
     setTimeout(()=>{ s.i++; renderQuestion(); }, ok?700:1900);
   }
   function showPass(){
