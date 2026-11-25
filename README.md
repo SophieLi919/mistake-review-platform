@@ -30,7 +30,7 @@
 **方法一：git**
 
 ```bash
-git clone https://github.com/<你的用户名>/mistake-workbench ~/.claude/skills/mistake-workbench-suite
+git clone https://github.com/SophieLi919/Sophie-Growth ~/.claude/skills/mistake-workbench-suite
 ```
 
 按需把其中一科或三科的文件夹拷进你的 Skill 目录：
