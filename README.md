@@ -1,4 +1,6 @@
-# 错题工作台 · mistake-workbench 三科版
+# 错题分析平台
+
+> Mistake Review Platform · 数学/语文/英语三科错题 AI 分析 Skill（原 mistake-workbench 三科版）
 
 > 不是把错题发给 AI 让它讲一遍，而是先找到「考什么」的课标标尺，再把整张卷子交给 AI 按能力维度分析、累积、出题、复查——最后长成一个手机可看的错题工作台网页。
 
@@ -30,7 +32,7 @@
 **方法一：git**
 
 ```bash
-git clone https://github.com/SophieLi919/Sophie-Growth ~/.claude/skills/mistake-workbench-suite
+git clone https://github.com/SophieLi919/mistake-review-platform ~/.claude/skills/mistake-workbench-suite
 ```
 
 按需把其中一科或三科的文件夹拷进你的 Skill 目录：
