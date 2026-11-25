@@ -29,7 +29,15 @@
 
 ## 安装
 
-**方法一：git**
+**方法一：把仓库链接发给你的 AI（最省事）**
+
+复制本仓库地址，发给你正在用的 AI 助手，说一句：
+
+> 帮我安装这个错题工作台 skill：https://github.com/SophieLi919/mistake-review-platform
+
+支持 Skill 的 Agent（WorkBuddy、Claude Code、Codex 等）会自己拉取并装好。装完重启对话就能用。
+
+**方法二：git**
 
 ```bash
 git clone https://github.com/SophieLi919/mistake-review-platform ~/.claude/skills/mistake-workbench-suite
@@ -41,9 +49,13 @@ git clone https://github.com/SophieLi919/mistake-review-platform ~/.claude/skill
 - Codex：`~/.codex/skills/`
 - WorkBuddy：`~/.workbuddy/skills/`
 
-**方法二：无 git**
+**方法三：无 git**
 
 GitHub 页面 → Code → Download ZIP，解压后把想用的科目文件夹拷进上面的 Skill 目录，重启 AI 助手即可。
+
+**进阶：多科合并工作台**
+
+如果装了多科，可以用根目录的 `build_merged.py` 把几科的工作台合成一个网页，顶部有「语文 / 数学 / 英语」切换条，一个文件看全部（用法见脚本头部注释）。
 
 ## 快速上手
 

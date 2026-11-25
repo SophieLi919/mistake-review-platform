@@ -21,6 +21,9 @@ nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
 nav button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;font-size:14px;cursor:pointer}
 nav button.on{border-color:var(--red);color:var(--red);font-weight:600}
 nav button.hi{border-color:var(--gold);color:var(--gold);font-weight:600}
+#subbar{display:none;gap:8px;margin-bottom:12px}
+#subbar button{flex:1;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 0;font-size:15px;font-weight:600;cursor:pointer;font-family:"Songti SC","Noto Serif SC",serif}
+#subbar button.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
 h2{font-size:18px;margin:22px 0 10px;font-family:"Songti SC","Noto Serif SC",serif}
 h3{font-size:15px;margin:0 0 6px}
 .card{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
@@ -218,6 +221,7 @@ h3{font-size:15px;margin:0 0 6px}
 <body>
 <div class="wrap">
 <header><h1 id="title">英语错题工作台</h1><span class="built" id="built"></span></header>
+<div id="subbar"></div>
 <nav id="nav"></nav>
 <main id="main"></main>
 </div>
@@ -226,11 +230,33 @@ h3{font-size:15px;margin:0 0 6px}
 <div class="modal" id="modal"><div class="box" id="modalbox"></div></div>
 <script>
 (function(){
-  const data = JSON.parse(document.getElementById('payload').textContent);
-  const notes = data.notes, images = data.images || {}, quiz = data.quiz || [];
-  const byKey = {}; notes.forEach(n => byKey[n.key] = n);
-  document.getElementById('title').textContent = data.title;
-  const pf=data.profile||{}; const pfs=[pf.child,pf.grade,pf.textbook].filter(Boolean).join(' · '); document.getElementById('built').textContent = (pfs?pfs+' · ':'') + '生成于 ' + data.builtAt.replace('T',' ');
+  const raw = JSON.parse(document.getElementById('payload').textContent);
+  const subjects = raw.subjects || null;
+  const subjectOrder = subjects ? Object.keys(subjects) : null;
+  let curSub = '';
+  let data, notes, images, quiz;
+  let byKey = {};
+  let state = {tab:'总览',note:null,stack:[],grp:'',sub:''};
+  const cardFilter = {grade:'',unit:''};
+  const viewFilter = {grade:'',unit:''};
+  let gstate = null;
+  let drillRef = null;
+  const nav = document.getElementById('nav');
+  const subbar = document.getElementById('subbar');
+  function mount(d, keepTab){
+    data = d;
+    notes = data.notes; images = data.images || {}; quiz = data.quiz || [];
+    byKey = {}; notes.forEach(n => byKey[n.key] = n);
+    document.getElementById('title').textContent = subjects ? ((data.profile&&data.profile.child?data.profile.child+'的':'')+'错题工作台') : data.title;
+    const pf=data.profile||{};
+    const pfs=[pf.child,pf.grade,pf.textbook].filter(Boolean).join(' · ');
+    document.getElementById('built').textContent = ((subjects?curSub+(pfs?' · ':''):'') + (pfs?pfs+' · ':'')) + '生成于 ' + data.builtAt.replace('T',' ');
+    cardFilter.grade='';cardFilter.unit='';viewFilter.grade='';viewFilter.unit='';
+    gstate=null;drillRef=null;
+    state.note=null;state.stack=[];state.grp='';
+    if(!keepTab || !tabs.some(t=>t[0]===keepTab)) state.tab='总览';
+    render();
+  }
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const kinds = k => notes.filter(n => n.kind === k);
   const byDate = (a,b) => (b.meta.date||b.meta.updated||'').localeCompare(a.meta.date||a.meta.updated||'');
@@ -262,7 +288,6 @@ h3{font-size:15px;margin:0 0 6px}
   }
 
   const tabs = [['总览',overview],['错题卡',cards],['看板',dashboard],['闯关 ⭐',game],['对标课标',standards],['卷子',()=>listing('卷子')],['练习',()=>listing('练习')]];
-  const nav = document.getElementById('nav');
   tabs.forEach(([name])=>{const b=document.createElement('button');b.textContent=name;if(name.indexOf('闯关')===0)b.className='hi';b.onclick=()=>go({tab:name});nav.appendChild(b);});
 
   function overview(){
@@ -314,7 +339,6 @@ h3{font-size:15px;margin:0 0 6px}
     if(m){ let v=m[1]; const map={'1':'一','2':'二','3':'三','4':'四','5':'五','6':'六','7':'七','8':'八'}; v=map[v]||v; return '第'+v+'单元'; }
     return '其他';
   }
-  const viewFilter={grade:'',unit:''};
   function filterBar(items){
     const grades=[...new Set(items.map(n=>n.meta.grade).filter(Boolean))];
     const gu={}; items.forEach(n=>{ const g=n.meta.grade||'未标年级',u=n.meta.unit||'未标单元';(gu[g]=gu[g]||new Set()).add(u); });
@@ -421,7 +445,6 @@ h3{font-size:15px;margin:0 0 6px}
     return null;
   }
   function pfNameOf(id){ const p=notes.find(x=>x.meta.id===id||x.meta.name===id); return p?p.meta.name:id; }
-  const cardFilter={grade:'',unit:''};
   function cards(){
     const items = kinds('错题').sort(byDate);
     if(!items.length) return '<h2>错题卡 · 错在哪一眼看清</h2><p class="empty">还没有错题笔记。整理卷子后，这里会变成一张张卡片。</p>';
@@ -488,8 +511,6 @@ h3{font-size:15px;margin:0 0 6px}
     return s;
   }
 
-  let gstate = null;
-  let drillRef = null;
   function game(){
     if(!quiz.length) return '<h2>闯关 · 连对3题通关</h2><div class="card"><p class="empty">题库还没建。整理错题后，在档案里建「闯关题库.md」，这里就能开玩。<br>题目全部从真实错题长出来，不编新场景。</p></div>';
     if(drillRef){
@@ -549,8 +570,7 @@ h3{font-size:15px;margin:0 0 6px}
     document.getElementById('mclose').onclick=()=>{ document.getElementById('modal').classList.remove('show'); go({tab:'闯关 ⭐'}); };
   }
 
-  const state={tab:'总览',note:null,stack:[],grp:''};
-  function go(next){ if(next.note){ state.stack.push({tab:state.tab,note:state.note}); state.note=next.note; } else { state.tab=next.tab||'总览'; state.grp=next.grp||''; state.note=null; state.stack=[]; } try{ history.replaceState(null,'', state.note?'#note='+encodeURIComponent(state.note):'#tab='+encodeURIComponent(state.tab)+(state.grp?'&grp='+encodeURIComponent(state.grp):'')); }catch(e){} render(); }
+  function go(next){ if(next.note){ state.stack.push({tab:state.tab,note:state.note}); state.note=next.note; } else { state.tab=next.tab||'总览'; state.grp=next.grp||''; state.note=null; state.stack=[]; } try{ const h=(subjects&&curSub?'sub='+encodeURIComponent(curSub)+'&':'')+(state.note?'note='+encodeURIComponent(state.note):'tab='+encodeURIComponent(state.tab)+(state.grp?'&grp='+encodeURIComponent(state.grp):'')); history.replaceState(null,'','#'+h); }catch(e){} render(); }
   function back(){ const prev=state.stack.pop(); if(prev){ state.tab=prev.tab; state.note=prev.note; } else { state.note=null; } render(); }
   document.addEventListener('click', e=>{
     const zoom=e.target.closest('[data-zoom]'); if(zoom){ document.getElementById('lbimg').src=zoom.src; document.getElementById('lightbox').classList.add('show'); return; }
@@ -574,8 +594,21 @@ h3{font-size:15px;margin:0 0 6px}
     main.innerHTML = t[1]();
     if(state.grp && !state.note) window.scrollTo(0,0);
   }
-  (function(){ const h=location.hash.slice(1); h.split('&').forEach(p=>{const [k,v]=p.split('='); if(k==='tab') state.tab=decodeURIComponent(v||'总览'); if(k==='note') state.note=decodeURIComponent(v||''); if(k==='grp') state.grp=decodeURIComponent(v||'');}); })();
-  render();
+  function switchSub(name){
+    if(!subjects || !subjects[name]) return;
+    curSub = name;
+    [...subbar.children].forEach(b=>b.classList.toggle('on', b.textContent===name));
+    mount(subjects[name], state.tab);
+    try{ history.replaceState(null,'','#sub='+encodeURIComponent(name)); }catch(e){}
+  }
+  (function(){ const h=location.hash.slice(1); h.split('&').forEach(p=>{const [k,v]=p.split('='); if(k==='sub') state.sub=decodeURIComponent(v||''); if(k==='tab') state.tab=decodeURIComponent(v||'总览'); if(k==='note') state.note=decodeURIComponent(v||''); if(k==='grp') state.grp=decodeURIComponent(v||'');}); })();
+  if(subjects){
+    subjectOrder.forEach(name=>{ const b=document.createElement('button'); b.textContent=name; b.onclick=()=>switchSub(name); subbar.appendChild(b); });
+    subbar.style.display='flex';
+    switchSub(subjectOrder.includes(state.sub) ? state.sub : subjectOrder[0]);
+  } else {
+    mount(raw);
+  }
 })();
 </script>
 </body>
