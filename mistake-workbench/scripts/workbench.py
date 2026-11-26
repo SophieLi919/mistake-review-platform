@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 SCHEMA = 'muma-mistake-workbench-v1'
-SECTIONS = ('卷子', '错题', '易错点', '维度', '盲区', '练习', '日志', '档案')
+SECTIONS = ('卷子', '错题', '易错点', '维度', '盲区', '练习', '行动', '日志', '档案')
 MEDIA = {'.jpg', '.jpeg', '.png', '.webp', '.gif', '.pdf', '.mp3', '.m4a', '.wav', '.ogg', '.mp4', '.html', '.docx'}
 WIKI = re.compile(r'(!?)\[\[([^\]\n]+)\]\]')
 GENERATED = '<!-- generated: muma-mistake-workbench-v1 -->'
@@ -25,6 +25,7 @@ TIERS = ('需巩固', '已具备', '未覆盖')
 PITFALL_STATUS = ('活跃', '减少', '消失', '历史')
 BLIND_STATUS = ('未覆盖', '已补练', '已有练习')
 PRACTICE_STATUS = ('待作答', '已作答')
+ACTION_STATUS = ('进行中', '已完成', '暂停')
 REQUIRED = {
     '卷子': ('id', 'subject', 'grade', 'unit', 'date', 'kind'),
     '错题': ('id', 'subject', 'grade', 'unit', 'date', 'status', 'cause', 'dimension'),
@@ -32,6 +33,7 @@ REQUIRED = {
     '维度': ('subject', 'dimension', 'group', 'level', 'updated'),
     '盲区': ('id', 'name', 'subject', 'task_group', 'status', 'source'),
     '练习': ('id', 'subject', 'date', 'status', 'targets'),
+    '行动': ('subject', 'date', 'targets', 'status'),
 }
 SCORE = re.compile(r'(\d+\s*分(?![钟析类配开别工布段支离母数解]))|(等级\s*[：:]\s*[ABCDabcd优良中差])|(\d+\s*分\s*[/／]\s*\d+)')
 
@@ -209,9 +211,13 @@ def collect(root):
             errors.append(note['path'] + ' status 只能是：' + ' / '.join(BLIND_STATUS))
         if kind == '练习' and meta.get('status') and meta['status'] not in PRACTICE_STATUS:
             errors.append(note['path'] + ' status 只能是：' + ' / '.join(PRACTICE_STATUS))
+        if kind == '行动' and meta.get('status') and meta['status'] not in ACTION_STATUS:
+            errors.append(note['path'] + ' status 只能是：' + ' / '.join(ACTION_STATUS))
+        if kind == '易错点' and meta.get('difficulty') and str(meta['difficulty']) not in ('1', '2', '3'):
+            errors.append(note['path'] + ' difficulty 只能是 1 / 2 / 3')
         if kind == '盲区' and meta.get('tier') and meta['tier'] not in TIERS:
             errors.append(note['path'] + ' tier 只能是：' + ' / '.join(TIERS))
-        if kind in ('错题', '练习') and meta.get('pitfalls' if kind == '错题' else 'targets'):
+        if kind in ('错题', '练习', '行动') and meta.get('pitfalls' if kind == '错题' else 'targets'):
             for item in re.split(r'[,，、]\s*', meta.get('pitfalls' if kind == '错题' else 'targets')):
                 item = item.strip()
                 if item and item not in pitfall_ids and item not in pitfall_names:

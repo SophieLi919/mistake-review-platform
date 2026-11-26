@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>英语错题工作台</title>
 <style>
-:root{--paper:#f7f9fb;--grid:rgba(60,100,160,.09);--ink:#1b2a41;--soft:#5a6a80;--red:#c8302b;--red-bg:rgba(200,48,43,.10);--green:#2f7d4f;--green-bg:rgba(47,125,79,.12);--amber:#b8860b;--amber-bg:rgba(184,134,11,.14);--gold:#c99a10;--card:#fff;--line:#d6dde8;--mono:"SF Mono",Menlo,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root{--paper:#141a22;--grid:rgba(120,160,220,.08);--ink:#e6ebf3;--soft:#a3afc2;--red:#ff6b61;--red-bg:rgba(255,107,97,.14);--green:#5fc48a;--green-bg:rgba(95,196,138,.16);--amber:#e3b341;--amber-bg:rgba(227,179,65,.16);--gold:#e3b341;--card:#1d2530;--line:#36404e}}
+:root{--paper:#f7f9fb;--grid:rgba(60,100,160,.09);--ink:#1b2a41;--soft:#5a6a80;--red:#c8302b;--red-bg:rgba(200,48,43,.10);--green:#2f7d4f;--green-bg:rgba(47,125,79,.12);--amber:#b8860b;--amber-bg:rgba(184,134,11,.14);--gold:#c99a10;--card:#fff;--line:#d6dde8;--line2:#8fa2bb;--hdr-bg:rgba(60,100,160,.10);--mono:"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--paper:#141a22;--grid:rgba(120,160,220,.08);--ink:#e6ebf3;--soft:#a3afc2;--red:#ff6b61;--red-bg:rgba(255,107,97,.14);--green:#5fc48a;--green-bg:rgba(95,196,138,.16);--amber:#e3b341;--amber-bg:rgba(227,179,65,.16);--gold:#e3b341;--card:#1d2530;--line:#36404e;--line2:#5b6a80;--hdr-bg:rgba(120,160,220,.14)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.7;padding:20px max(16px,env(safe-area-inset-left)) 60px max(16px,env(safe-area-inset-right))}
 .wrap{max-width:960px;margin:0 auto}
@@ -49,10 +49,13 @@ h3{font-size:15px;margin:0 0 6px}
 .note{max-width:720px}
 .note .meta{font-size:12px;color:var(--soft);font-family:var(--mono);margin-bottom:8px}
 .note img{max-width:100%;border-radius:6px;border:1px solid var(--line)}
-.note blockquote{border-left:3px solid var(--line);margin:8px 0;padding-left:10px;color:var(--soft)}
-.note table{border-collapse:collapse;font-size:13px;display:block;overflow-x:auto}
-.note td,.note th{border:1px solid var(--line);padding:4px 8px;vertical-align:top}
-.note a{color:var(--red)}
+.note h3,.dbody h3{background:var(--amber-bg);border-left:4px solid var(--amber);padding:5px 10px;border-radius:4px;margin:14px 0 6px;font-size:15px}
+.note blockquote,.dbody blockquote{border-left:4px solid var(--red);background:var(--red-bg);padding:8px 12px;border-radius:6px;margin:8px 0;color:var(--ink)}
+.note table,.dbody table{border-collapse:collapse;font-size:13px;display:block;overflow-x:auto;width:100%;border:2px solid var(--line2);border-radius:8px;margin:10px 0}
+.note td,.note th,.dbody td,.dbody th{border:1px solid var(--line2);padding:6px 10px;vertical-align:top}
+.note th,.dbody th{background:var(--hdr-bg);font-weight:700;text-align:left}
+.note tr:nth-child(even) td,.dbody tr:nth-child(even) td{background:rgba(60,100,160,.05)}
+.note a,.dbody a{color:var(--red)}
 .back{font-size:13px;color:var(--soft);cursor:pointer;margin-bottom:8px;display:inline-block}
 .empty{color:var(--soft);font-size:14px}
 .kv{font-size:13px;color:var(--soft)}
@@ -278,14 +281,14 @@ h3{font-size:15px;margin:0 0 6px}
     return s;
   }
   function md(body){
-    const lines = body.split('\n'); let out=[], i=0, list=null, table=null;
-    const flush=()=>{ if(list){out.push(`</${list}>`);list=null;} if(table){out.push('</table>');table=null;} };
+    const lines = body.split('\n'); let out=[], i=0, list=null, table=null, tableRows=0;
+    const flush=()=>{ if(list){out.push(`</${list}>`);list=null;} if(table){out.push('</table>');table=null;tableRows=0;} };
     while(i<lines.length){
       const l=lines[i];
       if(/^\s*$/.test(l)){flush();i++;continue;}
       let m;
       if((m=l.match(/^(#{1,4})\s+(.*)/))){flush();const h=m[1].length;out.push(`<h${h+1}>${inline(m[2])}</h${h+1}>`);i++;continue;}
-      if(/^\s*\|/.test(l)){ if(!table){flush();table=true;out.push('<table>');} if(/^\s*\|\s*-/.test(l)){i++;continue;} const cells=l.trim().replace(/^\||\|$/g,'').split('|'); out.push('<tr>'+cells.map(c=>`<td>${inline(c.trim())}</td>`).join('')+'</tr>'); i++; continue;}
+      if(/^\s*\|/.test(l)){ if(!table){flush();table=true;tableRows=0;out.push('<table>');} if(/^\s*\|\s*-/.test(l)){i++;continue;} const cells=l.trim().replace(/^\||\|$/g,'').split('|'); const tag=tableRows===0?'th':'td'; out.push('<tr>'+cells.map(c=>`<${tag}>${inline(c.trim())}</${tag}>`).join('')+'</tr>'); tableRows++; i++; continue;}
       if((m=l.match(/^\s*[-*]\s+(.*)/))){ if(list!=='ul'){flush();list='ul';out.push('<ul>');} out.push(`<li>${inline(m[1])}</li>`); i++; continue;}
       if((m=l.match(/^\s*\d+[.、]\s+(.*)/))){ if(list!=='ol'){flush();list='ol';out.push('<ol>');} out.push(`<li>${inline(m[1])}</li>`); i++; continue;}
       if((m=l.match(/^>\s?(.*)/))){flush();out.push(`<blockquote>${inline(m[1])}</blockquote>`);i++;continue;}
@@ -610,10 +613,14 @@ h3{font-size:15px;margin:0 0 6px}
   }
   function switchSub(name){
     if(!subjects || !subjects[name]) return;
+    const keepGrp=state.grp, keepNote=state.note;
     curSub = name;
     [...subbar.children].forEach(b=>b.classList.toggle('on', b.textContent===name));
     mount(subjects[name], state.tab);
-    try{ history.replaceState(null,'','#sub='+encodeURIComponent(name)); }catch(e){}
+    if(keepGrp && state.grp!==keepGrp) state.grp=keepGrp;
+    if(keepNote && state.note!==keepNote) state.note=keepNote;
+    render();
+    try{ history.replaceState(null,'','#'+(state.note?'sub='+encodeURIComponent(name)+'&note='+encodeURIComponent(state.note):'sub='+encodeURIComponent(name)+'&tab='+encodeURIComponent(state.tab)+(state.grp?'&grp='+encodeURIComponent(state.grp):''))); }catch(e){}
   }
   (function(){ const h=location.hash.slice(1); h.split('&').forEach(p=>{const [k,v]=p.split('='); if(k==='sub') state.sub=decodeURIComponent(v||''); if(k==='tab') state.tab=decodeURIComponent(v||'总览'); if(k==='note') state.note=decodeURIComponent(v||''); if(k==='grp') state.grp=decodeURIComponent(v||'');}); })();
   if(subjects){

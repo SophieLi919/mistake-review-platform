@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>数学错题工作台</title>
 <style>
-:root{--paper:#f7f9fb;--grid:rgba(60,100,160,.09);--ink:#1b2a41;--soft:#5a6a80;--red:#c8302b;--red-bg:rgba(200,48,43,.10);--green:#2f7d4f;--green-bg:rgba(47,125,79,.12);--amber:#b8860b;--amber-bg:rgba(184,134,11,.14);--gold:#c99a10;--card:#fff;--line:#d6dde8;--mono:"SF Mono",Menlo,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root{--paper:#141a22;--grid:rgba(120,160,220,.08);--ink:#e6ebf3;--soft:#a3afc2;--red:#ff6b61;--red-bg:rgba(255,107,97,.14);--green:#5fc48a;--green-bg:rgba(95,196,138,.16);--amber:#e3b341;--amber-bg:rgba(227,179,65,.16);--gold:#e3b341;--card:#1d2530;--line:#36404e}}
+:root{--paper:#f7f9fb;--grid:rgba(60,100,160,.09);--ink:#1b2a41;--soft:#5a6a80;--red:#c8302b;--red-bg:rgba(200,48,43,.10);--green:#2f7d4f;--green-bg:rgba(47,125,79,.12);--amber:#b8860b;--amber-bg:rgba(184,134,11,.14);--gold:#c99a10;--card:#fff;--line:#d6dde8;--line2:#8fa2bb;--hdr-bg:rgba(60,100,160,.10);--mono:"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--paper:#141a22;--grid:rgba(120,160,220,.08);--ink:#e6ebf3;--soft:#a3afc2;--red:#ff6b61;--red-bg:rgba(255,107,97,.14);--green:#5fc48a;--green-bg:rgba(95,196,138,.16);--amber:#e3b341;--amber-bg:rgba(227,179,65,.16);--gold:#e3b341;--card:#1d2530;--line:#36404e;--line2:#5b6a80;--hdr-bg:rgba(120,160,220,.14)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.7;padding:20px max(16px,env(safe-area-inset-left)) 60px max(16px,env(safe-area-inset-right))}
 .wrap{max-width:960px;margin:0 auto}
@@ -49,10 +49,13 @@ h3{font-size:15px;margin:0 0 6px}
 .note{max-width:720px}
 .note .meta{font-size:12px;color:var(--soft);font-family:var(--mono);margin-bottom:8px}
 .note img{max-width:100%;border-radius:6px;border:1px solid var(--line)}
-.note blockquote{border-left:3px solid var(--line);margin:8px 0;padding-left:10px;color:var(--soft)}
-.note table{border-collapse:collapse;font-size:13px;display:block;overflow-x:auto}
-.note td,.note th{border:1px solid var(--line);padding:4px 8px;vertical-align:top}
-.note a{color:var(--red)}
+.note h3,.dbody h3{background:var(--amber-bg);border-left:4px solid var(--amber);padding:5px 10px;border-radius:4px;margin:14px 0 6px;font-size:15px}
+.note blockquote,.dbody blockquote{border-left:4px solid var(--red);background:var(--red-bg);padding:8px 12px;border-radius:6px;margin:8px 0;color:var(--ink)}
+.note table,.dbody table{border-collapse:collapse;font-size:13px;display:block;overflow-x:auto;width:100%;border:2px solid var(--line2);border-radius:8px;margin:10px 0}
+.note td,.note th,.dbody td,.dbody th{border:1px solid var(--line2);padding:6px 10px;vertical-align:top}
+.note th,.dbody th{background:var(--hdr-bg);font-weight:700;text-align:left}
+.note tr:nth-child(even) td,.dbody tr:nth-child(even) td{background:rgba(60,100,160,.05)}
+.note a,.dbody a{color:var(--red)}
 .back{font-size:13px;color:var(--soft);cursor:pointer;margin-bottom:8px;display:inline-block}
 .empty{color:var(--soft);font-size:14px}
 .kv{font-size:13px;color:var(--soft)}
@@ -71,6 +74,26 @@ h3{font-size:15px;margin:0 0 6px}
 .ansline.pit{background:var(--amber-bg);border-radius:8px;padding:8px 10px;margin:8px 0 4px}
 .ansline.pit .lab{background:transparent;color:var(--amber)}
 .ansline.pit .txt{color:var(--ink);font-size:13px}
+.claims{margin:10px 0 2px;display:flex;flex-direction:column;gap:6px}
+.claim{text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:9px;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--ink);min-height:44px;line-height:1.55}
+.claim.c-k{border-left:4px solid var(--amber)}
+.claim.c-s{border-left:4px solid var(--red)}
+.claim.c-h{border-left:4px solid var(--soft)}
+.claim.on{border-color:var(--green);background:var(--green-bg);color:var(--green);font-weight:600}
+.c-hint{font-size:12px;color:var(--soft)}
+.star{color:var(--gold);font-size:12px;letter-spacing:1px}
+.actprog{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin:6px 0 10px}
+.actprog i{display:block;height:100%;background:var(--green)}
+.actrow{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:8px}
+.actrow.done .atitle{text-decoration:line-through;color:var(--soft)}
+.acthead{display:flex;align-items:flex-start;gap:10px}
+.actcheck{width:28px;height:28px;flex:none;border:2px solid var(--line);border-radius:8px;background:var(--card);cursor:pointer;font-size:16px;line-height:24px;text-align:center;color:var(--green)}
+.actcheck.on{background:var(--green-bg);border-color:var(--green)}
+.actcount{display:flex;align-items:center;gap:8px;flex:none}
+.actcount button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px}
+.actnote{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;background:var(--card);color:var(--ink);font-family:inherit;margin-top:8px}
+.streak{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin:14px 0}
+.streakbtn{border:1.5px solid var(--gold);background:var(--card);color:var(--gold);border-radius:9px;padding:8px 14px;cursor:pointer;font-size:14px}
 .wrong .lab{background:var(--red-bg);color:var(--red)}
 .right .lab{background:var(--green-bg);color:var(--green)}
 .wrong .txt{color:var(--red);text-decoration:line-through;text-decoration-thickness:1.5px}
@@ -90,6 +113,7 @@ h3{font-size:15px;margin:0 0 6px}
 .hallcard.c-red .num,.hallcard.c-red .ttl{color:var(--red)}
 .hallcard.c-green .num,.hallcard.c-green .ttl{color:var(--green)}
 .hallcard.c-amber .num,.hallcard.c-amber .ttl{color:var(--amber)}
+.hallcard.c-soft .num,.hallcard.c-soft .ttl{color:var(--soft)}
 .hallgrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
 .hallmini{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;font-size:14px}
 .hallmini:hover{border-color:var(--red)}
@@ -268,6 +292,23 @@ h3{font-size:15px;margin:0 0 6px}
   const kinds = k => notes.filter(n => n.kind === k);
   const byDate = (a,b) => (b.meta.date||b.meta.updated||'').localeCompare(a.meta.date||a.meta.updated||'');
   const imgSrc = t => images[t] || t;
+  const LS_K={claims:'mww_claims_v1',prog:'mww_prog_v1',streak:'mww_streak_v1'};
+  const lsGet=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+  const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+  const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+  const scKey=k=>(subjects&&curSub?curSub:'单')+'|'+k;
+  const claimOf=k=>{const v=lsGet(LS_K.claims,{})[scKey(k)];return typeof v==='number'?v:-1};
+  const setClaim=(k,i)=>{const o=lsGet(LS_K.claims,{});const sk=scKey(k);if(o[sk]===i)delete o[sk];else o[sk]=i;lsSet(LS_K.claims,o)};
+  const progOf=k=>{const o=lsGet(LS_K.prog,{});return o[scKey(k)]||{done:false,count:0,note:''}};
+  const setProg=(k,p)=>{const o=lsGet(LS_K.prog,{});o[scKey(k)]=p;lsSet(LS_K.prog,o)};
+  const CLAIM_CLS=[['知识没掌握','c-k'],['审题出偏差','c-s'],['习惯有漏洞','c-h']];
+  function claimsBlock(key,claims){
+    const picked=claimOf(key);
+    return '<div class="claims">'+claims.map((c,i)=>{
+      const cls=CLAIM_CLS.find(p=>c.indexOf(p[0])===0);
+      return `<button class="claim ${cls?cls[1]:''} ${i===picked?'on':''}" data-claim="${esc(key)}" data-ci="${i}">${esc(c)}</button>`;
+    }).join('')+'<span class="c-hint">'+(picked>=0?'✅ 你认领了这条——隔天重做前再看看它':'点一个最像你当时出错的情况。认领错因不是罚站，是知道自己该补哪块。')+'</span></div>';
+  }
 
   function inline(s){
     s = esc(s);
@@ -278,14 +319,14 @@ h3{font-size:15px;margin:0 0 6px}
     return s;
   }
   function md(body){
-    const lines = body.split('\n'); let out=[], i=0, list=null, table=null;
-    const flush=()=>{ if(list){out.push(`</${list}>`);list=null;} if(table){out.push('</table>');table=null;} };
+    const lines = body.split('\n'); let out=[], i=0, list=null, table=null, tableRows=0;
+    const flush=()=>{ if(list){out.push(`</${list}>`);list=null;} if(table){out.push('</table>');table=null;tableRows=0;} };
     while(i<lines.length){
       const l=lines[i];
       if(/^\s*$/.test(l)){flush();i++;continue;}
       let m;
       if((m=l.match(/^(#{1,4})\s+(.*)/))){flush();const h=m[1].length;out.push(`<h${h+1}>${inline(m[2])}</h${h+1}>`);i++;continue;}
-      if(/^\s*\|/.test(l)){ if(!table){flush();table=true;out.push('<table>');} if(/^\s*\|\s*-/.test(l)){i++;continue;} const cells=l.trim().replace(/^\||\|$/g,'').split('|'); out.push('<tr>'+cells.map(c=>`<td>${inline(c.trim())}</td>`).join('')+'</tr>'); i++; continue;}
+      if(/^\s*\|/.test(l)){ if(!table){flush();table=true;tableRows=0;out.push('<table>');} if(/^\s*\|\s*-/.test(l)){i++;continue;} const cells=l.trim().replace(/^\||\|$/g,'').split('|'); const tag=tableRows===0?'th':'td'; out.push('<tr>'+cells.map(c=>`<${tag}>${inline(c.trim())}</${tag}>`).join('')+'</tr>'); tableRows++; i++; continue;}
       if((m=l.match(/^\s*[-*]\s+(.*)/))){ if(list!=='ul'){flush();list='ul';out.push('<ul>');} out.push(`<li>${inline(m[1])}</li>`); i++; continue;}
       if((m=l.match(/^\s*\d+[.、]\s+(.*)/))){ if(list!=='ol'){flush();list='ol';out.push('<ol>');} out.push(`<li>${inline(m[1])}</li>`); i++; continue;}
       if((m=l.match(/^>\s?(.*)/))){flush();out.push(`<blockquote>${inline(m[1])}</blockquote>`);i++;continue;}
@@ -294,22 +335,23 @@ h3{font-size:15px;margin:0 0 6px}
     flush(); return out.join('\n');
   }
 
-  const tabs = [['总览',overview],['错题卡',cards],['看板',dashboard],['闯关 ⭐',game],['对标课标',standards],['卷子',()=>listing('卷子')],['练习',()=>listing('练习')]];
+  const tabs = [['总览',overview],['错题卡',cards],['看板',dashboard],['闯关 ⭐',game],['对标课标',standards],['易错点',()=>listing('易错点')],['本周行动',actionPage],['卷子',()=>listing('卷子')],['练习',()=>listing('练习')]];
   tabs.forEach(([name])=>{const b=document.createElement('button');b.textContent=name;if(name.indexOf('闯关')===0)b.className='hi';b.onclick=()=>go({tab:name});nav.appendChild(b);});
 
   function overview(){
     const pf=data.profile||{};
-    let h=`<div class="hall"><div class="hall-hi">${esc(pf.child||'孩子')} · ${esc(pf.grade||'')} · ${esc(pf.textbook||'')}</div><p class="kv">这里是入口。点数字卡直接跳到「对标课标」对应那一组。</p></div>`;
+    let h=`<div class="hall"><div class="hall-hi">${esc(pf.child||'孩子')} · ${esc(pf.grade||'')} · ${esc(pf.textbook||'')}</div><p class="kv">这里是入口。点数字卡按程度看核心能力，错题怎么归类的去「易错点」。</p></div>`;
     const act=kinds('易错点').filter(p=>p.meta.status==='活跃'||p.meta.status==='减少').length;
-    const strong=kinds('维度').filter(d=>d.meta.level==='扎实'||d.meta.level==='基本掌握').length;
-    const blinds=kinds('盲区').length;
-    h+='<div class="hallgrid">'
-      +`<div class="hallcard c-red" data-tab="对标课标" data-grp="need"><div class="num">${act}</div><div class="ttl">需巩固</div><div class="sub">看需补的能力点 →</div></div>`
-      +`<div class="hallcard c-green" data-tab="对标课标" data-grp="strong"><div class="num">${strong}</div><div class="ttl">已具备</div><div class="sub">看已具备的 →</div></div>`
-      +`<div class="hallcard c-amber" data-tab="对标课标" data-grp="blind"><div class="num">${blinds}</div><div class="ttl">未覆盖</div><div class="sub">看卷子没考的 →</div></div>`
+    const lvC=l=>kinds('维度').filter(d=>d.meta.level===l).length;    h+='<div class="hallgrid">'
+      +`<div class="hallcard c-red" data-tab="对标课标" data-grp="需加强"><div class="num">${lvC('需加强')}</div><div class="ttl">需加强</div><div class="sub">有错题证据的能力 →</div></div>`
+      +`<div class="hallcard c-amber" data-tab="对标课标" data-grp="基本掌握"><div class="num">${lvC('基本掌握')}</div><div class="ttl">基本掌握</div><div class="sub">站稳了，再核实 →</div></div>`
+      +`<div class="hallcard c-green" data-tab="对标课标" data-grp="扎实"><div class="num">${lvC('扎实')}</div><div class="ttl">扎实</div><div class="sub">看已稳的能力 →</div></div>`
+      +`<div class="hallcard c-soft" data-tab="对标课标" data-grp="未考察"><div class="num">${lvC('未考察')}</div><div class="ttl">未考察</div><div class="sub">还没考到的角落 →</div></div>`
       +'</div>';
     h+='<div class="hallgrid2">'
       +`<div class="hallmini" data-tab="错题卡"><b>错题卡</b><span>${kinds('错题').length} 张 · 按年级单元筛 →</span></div>`
+      +`<div class="hallmini" data-tab="易错点"><b>易错点</b><span>${act} 个活跃的坑 · 归并去重 →</span></div>`
+      +`<div class="hallmini" data-tab="本周行动"><b>本周行动</b><span>${kinds('行动').length} 条 · 一坑一打卡 →</span></div>`
       +`<div class="hallmini" data-tab="闯关 ⭐"><b>闯关 ⭐</b><span>连对3题通关 →</span></div>`
       +`<div class="hallmini" data-tab="看板"><b>看板</b><span>错因分布 · 排行榜 →</span></div>`
       +`<div class="hallmini" data-tab="卷子"><b>卷子</b><span>原卷照片按单元 →</span></div>`
@@ -323,20 +365,48 @@ h3{font-size:15px;margin:0 0 6px}
     return `<div class="card dim ${cls}" data-note="${esc(n.key)}" role="link" tabindex="0"><div class="head"><h3>${esc(n.meta.name||n.meta.dimension||n.title)}</h3>${extra}</div><div class="ev">${inline(ev)}</div></div>`;
   }
   function standards(){
-    const all=kinds('易错点').sort((a,b)=>(b.meta.last_seen||'').localeCompare(a.meta.last_seen||''));
-    const dims=kinds('维度').filter(d=>d.meta.level==='扎实'||d.meta.level==='基本掌握').sort(byDate);
-    const blinds=kinds('盲区').sort((a,b)=>(a.meta.task_group||'').localeCompare(b.meta.task_group||''));
-    let h='<h2>对标课标 · 能力核查</h2><p class="kv">拿 2022 课标这把尺子量孩子：红色是还需补的，绿色是已具备的，黄色是这几套卷没考到的角落。点方块看详情。这里跨单元累积，不按单元切；按单元看请去错题卡 / 卷子。</p>';
-    const secs={};
-    secs.need=`<section id="sec-need" class="stdsec"><h3 class="sh need">需巩固 <span class="kv">${all.length} 项</span></h3>`
-      +(all.length?`<div class="grid">${all.map(p=>dimCard(p,'l-需巩固',`<span class="tag s-${esc(p.meta.status)}">${esc(p.meta.status)}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
-    secs.strong=`<section id="sec-strong" class="stdsec"><h3 class="sh strong">已具备 <span class="kv">${dims.length} 项</span></h3>`
-      +(dims.length?`<div class="grid">${dims.map(d=>dimCard(d,'l-'+esc(d.meta.level),`<span class="lv">${esc(d.meta.level)}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
-    secs.blind=`<section id="sec-blind" class="stdsec"><h3 class="sh blind">未覆盖 <span class="kv">${blinds.length} 项</span></h3><p class="kv">不是孩子做错了，是这几套卷照不到的角落。要不要补、怎么补，由家长定。</p>`
-      +(blinds.length?`<div class="grid">${blinds.map(b=>dimCard(b,'l-未覆盖',`<span class="tag t-未覆盖">${esc(b.meta.task_group||'')}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
-    const order=['need','strong','blind'];
-    if(state.grp && order.includes(state.grp)){ order.splice(order.indexOf(state.grp),1); order.unshift(state.grp); }
-    return h+order.map(k=>secs[k]).join('');
+    const dims=kinds('维度');
+    const CANON=['会用数学的眼光观察现实世界','会用数学的语言表达现实世界','会用数学的思维思考现实世界','学习习惯'];
+    const LVS=['扎实','基本掌握','需加强','未考察'];
+    const seen=[]; dims.forEach(d=>{const g=d.meta.group||'未分组'; if(!seen.includes(g)) seen.push(g);});
+    const groups=[...CANON.filter(g=>seen.includes(g)), ...seen.filter(g=>!CANON.includes(g))];
+    const lv=LVS.includes(state.grp)?state.grp:'';
+    let h='<h2>课标维度 · 掌握程度</h2>';
+    if(!groups.length) return h+'<p class="empty">还没有课标维度记录。</p>';
+    h+='<p class="kv">'+(lv?('只看「'+lv+'」的项——点总览的方块跳过来的，看完去别的程度就再点一次总览卡片。'):'拿 2022 课标这把尺子量孩子：核心能力全部摆在这里——需加强是有错题证据的，未考察是这几套材料还没考到的，不是不会。点卡片看课标定义和证据。错题归并出来的坑在「易错点」页。')+'</p>';
+    groups.forEach(g=>{
+      const items=dims.filter(d=>(d.meta.group||'未分组')===g&&(!lv||d.meta.level===lv));
+      if(lv&&!items.length) return;
+      h+=`<section class="stdsec"><h3 class="sh">${esc(g)} <span class="kv">${items.length} 项</span></h3>`
+        +(items.length?`<div class="grid">${items.map(d=>dimCard(d,'l-'+esc(d.meta.level||'未考察'),`<span class="lv">${esc(d.meta.level||'未考察')}</span>`)).join('')}</div>`:'<p class="empty">还没有记录。</p>')+'</section>';
+    });
+    return h;
+  }
+  function actionPage(){
+    const items=kinds('行动');
+    let h='<h2>本周行动 · 一条绑一个坑</h2>';
+    if(!items.length) return h+'<p class="empty">还没有行动安排。在对话里说「出本周行动」，AI 会按坑排几条，每天碰一下就行。</p>';
+    const done=items.filter(n=>progOf(n.key).done).length;
+    h+='<div class="actprog"><i style="width:'+(items.length?Math.round(done/items.length*100):0)+'%"></i></div>'
+      +`<p class="kv">完成 ${done}/${items.length} · 打卡次数和备注记在这台电脑的浏览器里</p>`;
+    h+=items.map(n=>{
+      const m=n.meta, p=progOf(n.key);
+      const pfs=String(m.targets||'').split(/[,，、]\s*/).filter(Boolean).map(x=>`<span class="chip pf">${esc(pfNameOf(x))}</span>`).join('');
+      const stars='⭐'.repeat(Math.max(1,Math.min(3,+m.difficulty||1)));
+      const first=(n.body.split('\n').find(y=>y.trim()&&!/^#/.test(y.trim()))||'').trim();
+      return `<div class="actrow ${p.done?'done':''}"><div class="acthead"><button class="actcheck ${p.done?'on':''}" data-act="${esc(n.key)}" data-actdo="1" aria-label="标记完成">${p.done?'✓':''}</button><div style="flex:1;min-width:0"><div class="atitle" style="font-weight:700">${esc(n.title)}</div><div class="kv">${stars} ${esc(m.date||'')} ${pfs}</div><div class="ev">${inline(first)}</div></div><div class="actcount"><button data-act="${esc(n.key)}" data-actdo="dec" aria-label="减一次">−</button><b>${p.count}</b>次<button data-act="${esc(n.key)}" data-actdo="inc" aria-label="加一次">＋</button></div></div><input class="actnote" data-act="${esc(n.key)}" data-actdo="note" value="${esc(p.note||'')}" placeholder="备注：今天错在哪、明天留心什么"></div>`;
+    }).join('');
+    const st=lsGet(LS_K.streak,{last:'',days:0});
+    const today=todayStr();
+    h+=`<div class="streak"><div>不用猛刷，每天碰一下就行——已坚持 <b style="font-size:22px;color:var(--gold)">${st.days||0}</b> 天</div><button class="streakbtn" data-actdo="streak">${st.last===today?'今天碰过了 ✓':'今天碰过了吗？点一下'}</button></div>`;
+    const pf=kinds('易错点').filter(x=>x.meta.status==='活跃'||x.meta.status==='减少');
+    if(pf.length){
+      h+='<h2>考前速览 · 每个坑一句话</h2><div class="card list">'+pf.sort((a,b)=>(b.meta.last_seen||'').localeCompare(a.meta.last_seen||'')).map(x=>{
+        const line=(x.body.split('\n').find(y=>y.trim()&&!/^#/.test(y.trim()))||'').trim().slice(0,80);
+        return `<a href="#" data-note="${esc(x.key)}">${esc(x.meta.name||x.title)}<small>${esc(line)}</small></a>`;
+      }).join('')+'</div>';
+    }
+    return h;
   }
   function linkRow(n){ const m=n.meta; const extra=[m.date||m.updated,m.grade,m.unit,m.status].filter(Boolean).join(' · '); return `<a href="#" data-note="${esc(n.key)}">${esc(n.title)}<small>${esc(extra)}</small></a>`; }
   function unitOfImage(t){
@@ -380,6 +450,16 @@ h3{font-size:15px;margin:0 0 6px}
     if(kind==='卷子') return paperGallery();
     const items=kinds(kind).sort(byDate);
     let h=`<h2>${kind}</h2>`;
+    if(kind==='易错点'&&items.length){
+      h+='<p class="kv">错题归并出来的坑：10 道错题翻来覆去就这几个坑。一张坑一张卡牌，难度用星星标，点开看原题和出现记录。坑填得差不多了，对应的课标维度程度就会往上走。</p>';
+      const cnt=p=>kinds('错题').filter(n=>String(n.meta.pitfalls||'').split(/[,，、]\s*/).map(x=>x.trim()).includes(p.meta.id||p.title)).length;
+      return h+'<div class="grid">'+items.map(p=>{
+        const d=+p.meta.difficulty||0;
+        const stars=d?'<span class="star">'+'⭐'.repeat(d)+'</span>':'';
+        const line=(p.body.split('\n').find(y=>y.trim()&&!/^#/.test(y.trim()))||'').trim().slice(0,70);
+        return `<div class="card dim l-需巩固" data-note="${esc(p.key)}" role="link" tabindex="0"><div class="head"><h3>${esc(p.meta.name||p.title)}</h3>${stars}</div><div class="ev">${inline(line)}</div><div class="kv" style="margin-top:6px">${cnt(p)} 道题 · <span class="tag s-${esc(p.meta.status)}">${esc(p.meta.status)}</span></div></div>`;
+      }).join('')+'</div>';
+    }
     if(kind==='练习'&&items.length){
       h+=filterBar(items);
       const shown=items.filter(matchFilter);
@@ -403,7 +483,9 @@ h3{font-size:15px;margin:0 0 6px}
     if(m.q) h+=`<div class="dstem">${esc(m.q)}</div>`;
     if(m.wrong) h+=`<div class="ansline wrong"><span class="lab">错答</span><span class="txt">${esc(m.wrong)}</span></div>`;
     if(m.right) h+=`<div class="ansline right"><span class="lab">正答</span><span class="txt">${esc(m.right)}</span></div>`;
-    if(m.note) h+=`<div class="ansline note"><span class="lab">易错点</span><span class="txt">${esc(m.note)}</span></div>`;
+    if(m.note) h+=`<div class="ansline pit"><span class="lab">易错点</span><span class="txt">${esc(m.note)}</span></div>`;
+    const claims=String(m.claims||'').split('|').filter(Boolean);
+    if(claims.length) h+=claimsBlock(n.key,claims);
     h+='</div>';
     // 完整分析只保留错题卡没有的：反思条、老师批改、下一步。跳过重复的「原题与孩子的答案」「正确写法」
     const secs=n.body.split(/^## /m).slice(1);
@@ -473,9 +555,10 @@ h3{font-size:15px;margin:0 0 6px}
       const tags=`<span class="chip grade">${esc(m.grade||'')}</span><span class="chip unit">${esc(m.unit||'未标单元')}</span>`;
       const wrong = m.wrong?`<div class="ansline wrong"><span class="lab">错答</span><span class="txt">${esc(m.wrong)}</span></div>`:'';
       const right = m.right?`<div class="ansline right"><span class="lab">正答</span><span class="txt">${esc(m.right)}</span></div>`:'';
-      const pit = m.note?`<div class="ansline note"><span class="lab">易错点</span><span class="txt">${esc(m.note)}</span></div>`:'';
+      const pit = m.note?`<div class="ansline pit"><span class="lab">易错点</span><span class="txt">${esc(m.note)}</span></div>`:'';
+      const claims=String(m.claims||'').split('|').filter(Boolean);
       const qref=quiz.some(z=>z.ref===m.id)?`<button class="drillbtn" data-drill="${esc(m.id)}">练这题 ▶</button>`:'';
-      h += `<div class="qcard"><div class="qhead"><span class="qno">${esc(m.id||'CT')}</span>${tags}${cause}${pfTags}</div><div class="qbody"><div class="stem">${esc(q)}</div>${wrong}${right}${pit}</div><div class="qfoot"><span>${esc(m.date||'')}</span><span class="cardacts">${qref}<a href="#" data-note="${esc(n.key)}">完整分析 →</a></span></div></div>`;
+      h += `<div class="qcard"><div class="qhead"><span class="qno">${esc(m.id||'CT')}</span>${tags}${cause}${pfTags}</div><div class="qbody"><div class="stem">${esc(q)}</div>${wrong}${right}${pit}${claims.length?claimsBlock(n.key,claims):''}</div><div class="qfoot"><span>${esc(m.date||'')}</span><span class="cardacts">${qref}<a href="#" data-note="${esc(n.key)}">完整分析 →</a></span></div></div>`;
     });
     return h+'</div>'+(shown.length?'':'<p class="empty">这个筛选条件下没有错题。</p>');
   }
@@ -593,12 +676,18 @@ h3{font-size:15px;margin:0 0 6px}
     const dz=e.target.closest('[data-drill]'); if(dz){ drillRef=dz.dataset.drill; go({tab:'闯关 ⭐'}); startGame(drillRef); return; }
     const da=e.target.closest('[data-alldril]'); if(da){ drillRef=null; render(); return; }
     const sk=e.target.closest('.skillbtn'); if(sk){ startGame(sk.dataset.skill); return; }
-    const a=e.target.closest('[data-note],[data-tab],[data-grp],[data-back]'); if(!a) return; e.preventDefault(); if(a.dataset.back) back(); else if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab});
+    const a=e.target.closest('[data-note],[data-tab],[data-grp],[data-back],[data-claim],[data-act]'); if(!a||a.dataset.actdo==='note') return; e.preventDefault(); if(a.dataset.back) back(); else if(a.dataset.claim!==undefined){ setClaim(a.dataset.claim,+a.dataset.ci); render(); } else if(a.dataset.act!==undefined){ actDo(a.dataset.act,a.dataset.actdo); } else if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab});
   });
   document.addEventListener('change', e=>{
     const f=e.target.closest('[data-filter]'); if(!f) return;
     cardFilter[f.dataset.filter]=f.value; render();
   });
+  function actDo(k,doWhat){
+    if(doWhat==='1'){ const p=progOf(k); p.done=!p.done; setProg(k,p); render(); }
+    else if(doWhat==='inc'||doWhat==='dec'){ const p=progOf(k); p.count=Math.max(0,p.count+(doWhat==='inc'?1:-1)); setProg(k,p); render(); }
+    else if(doWhat==='streak'){ const o=lsGet(LS_K.streak,{last:'',days:0}); const t=todayStr(); if(o.last!==t){ const y=new Date(Date.now()-864e5); const ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+y.getDate(); o.days=(o.last===ys)?(o.days||0)+1:1; o.last=t; lsSet(LS_K.streak,o); render(); } }
+  }
+  document.addEventListener('change',e=>{ const a=e.target.closest('[data-actdo="note"]'); if(a&&a.dataset.act){ const p=progOf(a.dataset.act); p.note=a.value; setProg(a.dataset.act,p); } });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ document.getElementById('lightbox').classList.remove('show'); document.getElementById('modal').classList.remove('show'); } if(e.key!=='Enter'&&e.key!==' ') return; const a=e.target.closest('[data-note],[data-tab],[data-grp]'); if(!a) return; e.preventDefault(); if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab}); });
   function render(){
     const main=document.getElementById('main');
@@ -610,10 +699,14 @@ h3{font-size:15px;margin:0 0 6px}
   }
   function switchSub(name){
     if(!subjects || !subjects[name]) return;
+    const keepGrp=state.grp, keepNote=state.note;
     curSub = name;
     [...subbar.children].forEach(b=>b.classList.toggle('on', b.textContent===name));
     mount(subjects[name], state.tab);
-    try{ history.replaceState(null,'','#sub='+encodeURIComponent(name)); }catch(e){}
+    if(keepGrp && state.grp!==keepGrp) state.grp=keepGrp;
+    if(keepNote && state.note!==keepNote) state.note=keepNote;
+    render();
+    try{ history.replaceState(null,'','#'+(state.note?'sub='+encodeURIComponent(name)+'&note='+encodeURIComponent(state.note):'sub='+encodeURIComponent(name)+'&tab='+encodeURIComponent(state.tab)+(state.grp?'&grp='+encodeURIComponent(state.grp):''))); }catch(e){}
   }
   (function(){ const h=location.hash.slice(1); h.split('&').forEach(p=>{const [k,v]=p.split('='); if(k==='sub') state.sub=decodeURIComponent(v||''); if(k==='tab') state.tab=decodeURIComponent(v||'总览'); if(k==='note') state.note=decodeURIComponent(v||''); if(k==='grp') state.grp=decodeURIComponent(v||'');}); })();
   if(subjects){
