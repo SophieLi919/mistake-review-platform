@@ -68,6 +68,9 @@ h3{font-size:15px;margin:0 0 6px}
 .qbody .stem{margin-bottom:10px;line-height:1.6}
 .ansline{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:13.5px}
 .ansline .lab{flex:none;font-weight:700;font-size:12px;padding:1px 6px;border-radius:4px}
+.ansline.pit{background:var(--amber-bg);border-radius:8px;padding:8px 10px;margin:8px 0 4px}
+.ansline.pit .lab{background:transparent;color:var(--amber)}
+.ansline.pit .txt{color:var(--ink);font-size:13px}
 .wrong .lab{background:var(--red-bg);color:var(--red)}
 .right .lab{background:var(--green-bg);color:var(--green)}
 .wrong .txt{color:var(--red);text-decoration:line-through;text-decoration-thickness:1.5px}
@@ -400,6 +403,7 @@ h3{font-size:15px;margin:0 0 6px}
     if(m.q) h+=`<div class="dstem">${esc(m.q)}</div>`;
     if(m.wrong) h+=`<div class="ansline wrong"><span class="lab">错答</span><span class="txt">${esc(m.wrong)}</span></div>`;
     if(m.right) h+=`<div class="ansline right"><span class="lab">正答</span><span class="txt">${esc(m.right)}</span></div>`;
+    if(m.note) h+=`<div class="ansline note"><span class="lab">易错点</span><span class="txt">${esc(m.note)}</span></div>`;
     h+='</div>';
     // 完整分析只保留错题卡没有的：反思条、老师批改、下一步。跳过重复的「原题与孩子的答案」「正确写法」
     const secs=n.body.split(/^## /m).slice(1);
@@ -469,8 +473,9 @@ h3{font-size:15px;margin:0 0 6px}
       const tags=`<span class="chip grade">${esc(m.grade||'')}</span><span class="chip unit">${esc(m.unit||'未标单元')}</span>`;
       const wrong = m.wrong?`<div class="ansline wrong"><span class="lab">错答</span><span class="txt">${esc(m.wrong)}</span></div>`:'';
       const right = m.right?`<div class="ansline right"><span class="lab">正答</span><span class="txt">${esc(m.right)}</span></div>`:'';
+      const pit = m.note?`<div class="ansline note"><span class="lab">易错点</span><span class="txt">${esc(m.note)}</span></div>`:'';
       const qref=quiz.some(z=>z.ref===m.id)?`<button class="drillbtn" data-drill="${esc(m.id)}">练这题 ▶</button>`:'';
-      h += `<div class="qcard"><div class="qhead"><span class="qno">${esc(m.id||'CT')}</span>${tags}${cause}${pfTags}</div><div class="qbody"><div class="stem">${esc(q)}</div>${wrong}${right}</div><div class="qfoot"><span>${esc(m.date||'')}</span><span class="cardacts">${qref}<a href="#" data-note="${esc(n.key)}">完整分析 →</a></span></div></div>`;
+      h += `<div class="qcard"><div class="qhead"><span class="qno">${esc(m.id||'CT')}</span>${tags}${cause}${pfTags}</div><div class="qbody"><div class="stem">${esc(q)}</div>${wrong}${right}${pit}</div><div class="qfoot"><span>${esc(m.date||'')}</span><span class="cardacts">${qref}<a href="#" data-note="${esc(n.key)}">完整分析 →</a></span></div></div>`;
     });
     return h+'</div>'+(shown.length?'':'<p class="empty">这个筛选条件下没有错题。</p>');
   }
