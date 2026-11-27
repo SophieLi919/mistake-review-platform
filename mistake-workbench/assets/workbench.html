@@ -81,6 +81,9 @@ h3{font-size:15px;margin:0 0 6px}
 .claim.c-h{border-left:4px solid var(--soft)}
 .claim.on{border-color:var(--green);background:var(--green-bg);color:var(--green);font-weight:600}
 .c-hint{font-size:12px;color:var(--soft)}
+.claim-extra{width:100%;box-sizing:border-box;border:1.5px dashed var(--line);background:var(--card);color:var(--ink);border-radius:9px;padding:8px 12px;font-size:13px;line-height:1.55;min-height:44px;resize:vertical;font-family:inherit}
+.claim-extra:focus{outline:none;border-color:var(--green);background:var(--green-bg)}
+.claim-extra::placeholder{color:var(--soft)}
 .star{color:var(--gold);font-size:12px;letter-spacing:1px}
 .actprog{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin:6px 0 10px}
 .actprog i{display:block;height:100%;background:var(--green)}
@@ -292,22 +295,28 @@ h3{font-size:15px;margin:0 0 6px}
   const kinds = k => notes.filter(n => n.kind === k);
   const byDate = (a,b) => (b.meta.date||b.meta.updated||'').localeCompare(a.meta.date||a.meta.updated||'');
   const imgSrc = t => images[t] || t;
-  const LS_K={claims:'mww_claims_v1',prog:'mww_prog_v1',streak:'mww_streak_v1'};
-  const lsGet=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
-  const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+  const LS_K={claims:'mww_claims_v1',claimnote:'mww_claimnote_v1',prog:'mww_prog_v1',streak:'mww_streak_v1'};
+  const memStore={}; // 预览面板等禁 localStorage 的环境里兜底，保证当前会话能点能高亮
+  const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);if(v!=null)return JSON.parse(v)}catch(e){} return memStore[k]!=null?memStore[k]:d};
+  const lsSet=(k,v)=>{memStore[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
   const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
   const scKey=k=>(subjects&&curSub?curSub:'单')+'|'+k;
   const claimOf=k=>{const v=lsGet(LS_K.claims,{})[scKey(k)];return typeof v==='number'?v:-1};
   const setClaim=(k,i)=>{const o=lsGet(LS_K.claims,{});const sk=scKey(k);if(o[sk]===i)delete o[sk];else o[sk]=i;lsSet(LS_K.claims,o)};
+  const claimNoteOf=k=>{const v=lsGet(LS_K.claimnote,{})[scKey(k)];return typeof v==='string'?v:''};
+  const setClaimNote=(k,v)=>{const o=lsGet(LS_K.claimnote,{});const sk=scKey(k);if(v)o[sk]=v;else delete o[sk];lsSet(LS_K.claimnote,o)};
   const progOf=k=>{const o=lsGet(LS_K.prog,{});return o[scKey(k)]||{done:false,count:0,note:''}};
   const setProg=(k,p)=>{const o=lsGet(LS_K.prog,{});o[scKey(k)]=p;lsSet(LS_K.prog,o)};
   const CLAIM_CLS=[['知识没掌握','c-k'],['审题出偏差','c-s'],['习惯有漏洞','c-h']];
   function claimsBlock(key,claims){
-    const picked=claimOf(key);
+    const picked=claimOf(key), extra=claimNoteOf(key);
+    const hint = (picked>=0||extra)
+      ? '✅ 已记下'+(extra?'你的补充':'你的认领')+'——隔天重做前再看看它。'
+      : '点一个最像你当时出错的情况；上面都不像，就在下面自己写一条。认领错因不是罚站，是知道自己该补哪块。';
     return '<div class="claims">'+claims.map((c,i)=>{
       const cls=CLAIM_CLS.find(p=>c.indexOf(p[0])===0);
       return `<button class="claim ${cls?cls[1]:''} ${i===picked?'on':''}" data-claim="${esc(key)}" data-ci="${i}">${esc(c)}</button>`;
-    }).join('')+'<span class="c-hint">'+(picked>=0?'✅ 你认领了这条——隔天重做前再看看它':'点一个最像你当时出错的情况。认领错因不是罚站，是知道自己该补哪块。')+'</span></div>';
+    }).join('')+`<textarea class="claim-extra" data-claimnote="${esc(key)}" rows="2" placeholder="其他原因 / 补充说明：上面没写到的，或者当时是问了别人才做对的…">${esc(extra)}</textarea>`+'<span class="c-hint">'+hint+'</span></div>';
   }
 
   function inline(s){
@@ -669,6 +678,23 @@ h3{font-size:15px;margin:0 0 6px}
 
   function go(next){ if(next.note){ state.stack.push({tab:state.tab,note:state.note}); state.note=next.note; } else { state.tab=next.tab||'总览'; state.grp=next.grp||''; state.note=null; state.stack=[]; } try{ const h=(subjects&&curSub?'sub='+encodeURIComponent(curSub)+'&':'')+(state.note?'note='+encodeURIComponent(state.note):'tab='+encodeURIComponent(state.tab)+(state.grp?'&grp='+encodeURIComponent(state.grp):'')); history.replaceState(null,'','#'+h); }catch(e){} render(); }
   function back(){ const prev=state.stack.pop(); if(prev){ state.tab=prev.tab; state.note=prev.note; } else { state.note=null; } render(); }
+  // 认领按钮只做局部更新：不重绘整页，避免 11MB 页面卡顿 + 输入框内容丢失
+  function refreshClaimHint(box,key){
+    if(!box) return;
+    const picked=claimOf(key), extra=claimNoteOf(key), hint=box.querySelector('.c-hint');
+    box.querySelectorAll('.claim').forEach(b=>b.classList.toggle('on',+b.dataset.ci===picked));
+    if(hint) hint.textContent=(picked>=0||extra)
+      ? '✅ 已记下'+(extra?'你的补充':'你的认领')+'——隔天重做前再看看它。'
+      : '点一个最像你当时出错的情况；上面都不像，就在下面自己写一条。认领错因不是罚站，是知道自己该补哪块。';
+  }
+  function pickClaim(btn){
+    const key=btn.dataset.claim;
+    setClaim(key,+btn.dataset.ci);
+    document.querySelectorAll('.claims').forEach(box=>{
+      const t=box.querySelector('[data-claimnote]');
+      if(t&&t.dataset.claimnote===key) refreshClaimHint(box,key);
+    });
+  }
   document.addEventListener('click', e=>{
     const zoom=e.target.closest('[data-zoom]'); if(zoom){ document.getElementById('lbimg').src=zoom.src; document.getElementById('lightbox').classList.add('show'); return; }
     if(e.target.closest('#lightbox')){ document.getElementById('lightbox').classList.remove('show'); return; }
@@ -676,7 +702,8 @@ h3{font-size:15px;margin:0 0 6px}
     const dz=e.target.closest('[data-drill]'); if(dz){ drillRef=dz.dataset.drill; go({tab:'闯关 ⭐'}); startGame(drillRef); return; }
     const da=e.target.closest('[data-alldril]'); if(da){ drillRef=null; render(); return; }
     const sk=e.target.closest('.skillbtn'); if(sk){ startGame(sk.dataset.skill); return; }
-    const a=e.target.closest('[data-note],[data-tab],[data-grp],[data-back],[data-claim],[data-act]'); if(!a||a.dataset.actdo==='note') return; e.preventDefault(); if(a.dataset.back) back(); else if(a.dataset.claim!==undefined){ setClaim(a.dataset.claim,+a.dataset.ci); render(); } else if(a.dataset.act!==undefined){ actDo(a.dataset.act,a.dataset.actdo); } else if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab});
+    if(e.target.matches('textarea,input')) return;
+    const a=e.target.closest('[data-note],[data-tab],[data-grp],[data-back],[data-claim],[data-act]'); if(!a||a.dataset.actdo==='note') return; e.preventDefault(); if(a.dataset.back) back(); else if(a.dataset.claim!==undefined){ pickClaim(a); } else if(a.dataset.act!==undefined){ actDo(a.dataset.act,a.dataset.actdo); } else if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab});
   });
   document.addEventListener('change', e=>{
     const f=e.target.closest('[data-filter]'); if(!f) return;
@@ -688,7 +715,13 @@ h3{font-size:15px;margin:0 0 6px}
     else if(doWhat==='streak'){ const o=lsGet(LS_K.streak,{last:'',days:0}); const t=todayStr(); if(o.last!==t){ const y=new Date(Date.now()-864e5); const ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+y.getDate(); o.days=(o.last===ys)?(o.days||0)+1:1; o.last=t; lsSet(LS_K.streak,o); render(); } }
   }
   document.addEventListener('change',e=>{ const a=e.target.closest('[data-actdo="note"]'); if(a&&a.dataset.act){ const p=progOf(a.dataset.act); p.note=a.value; setProg(a.dataset.act,p); } });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ document.getElementById('lightbox').classList.remove('show'); document.getElementById('modal').classList.remove('show'); } if(e.key!=='Enter'&&e.key!==' ') return; const a=e.target.closest('[data-note],[data-tab],[data-grp]'); if(!a) return; e.preventDefault(); if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab}); });
+  // 补充框随手记，不重渲染，免得打字时掉焦点
+  document.addEventListener('input',e=>{
+    const t=e.target.closest('[data-claimnote]'); if(!t) return;
+    setClaimNote(t.dataset.claimnote,t.value);
+    refreshClaimHint(t.parentElement,t.dataset.claimnote);
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ document.getElementById('lightbox').classList.remove('show'); document.getElementById('modal').classList.remove('show'); } if(e.key!=='Enter'&&e.key!==' ') return; if(e.target.matches('textarea,input')) return; const a=e.target.closest('[data-note],[data-tab],[data-grp]'); if(!a) return; e.preventDefault(); if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab}); });
   function render(){
     const main=document.getElementById('main');
     [...nav.children].forEach(b=>b.classList.toggle('on', b.textContent===state.tab && !state.note));
