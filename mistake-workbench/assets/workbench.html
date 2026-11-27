@@ -17,6 +17,8 @@ h1{font-size:24px;margin:0;font-family:"Songti SC","Noto Serif SC",serif;font-we
 .t-需巩固{background:var(--red-bg);color:var(--red)}.t-已具备{background:var(--green-bg);color:var(--green)}.t-未覆盖{background:var(--amber-bg);color:var(--amber)}
 .dim.l-未考察{border-left-color:var(--soft)}
 .built{font-size:12px;color:var(--soft)}
+.backupbtn{margin-left:auto;border:1.5px solid var(--gold);background:var(--gold);color:#1b2a41;border-radius:9px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.bkbox{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:11px;line-height:1.5;min-height:150px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--paper);color:var(--ink);resize:vertical}
 nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
 nav button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;font-size:14px;cursor:pointer}
 nav button.on{border-color:var(--red);color:var(--red);font-weight:600}
@@ -254,7 +256,7 @@ h3{font-size:15px;margin:0 0 6px}
 </head>
 <body>
 <div class="wrap">
-<header><h1 id="title">数学错题工作台</h1><span class="built" id="built"></span></header>
+<header><h1 id="title">数学错题工作台</h1><span class="built" id="built"></span><button class="backupbtn" data-backup>💾 备份认领</button></header>
 <div id="subbar"></div>
 <nav id="nav"></nav>
 <main id="main"></main>
@@ -297,6 +299,10 @@ h3{font-size:15px;margin:0 0 6px}
   const imgSrc = t => images[t] || t;
   const LS_K={claims:'mww_claims_v1',claimnote:'mww_claimnote_v1',prog:'mww_prog_v1',streak:'mww_streak_v1'};
   const memStore={}; // 预览面板等禁 localStorage 的环境里兜底，保证当前会话能点能高亮
+  // 认领数据种子来自档案文件（由生成脚本注入），迭代工作台不会丢；localStorage 里有则以本地为准
+  const seed = raw.claimSeed || {};
+  if(seed.claims && typeof seed.claims==='object') memStore[LS_K.claims]=seed.claims;
+  if(seed.claimnote && typeof seed.claimnote==='object') memStore[LS_K.claimnote]=seed.claimnote;
   const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);if(v!=null)return JSON.parse(v)}catch(e){} return memStore[k]!=null?memStore[k]:d};
   const lsSet=(k,v)=>{memStore[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
   const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -687,6 +693,26 @@ h3{font-size:15px;margin:0 0 6px}
       ? '✅ 已记下'+(extra?'你的补充':'你的认领')+'——隔天重做前再看看它。'
       : '点一个最像你当时出错的情况；上面都不像，就在下面自己写一条。认领错因不是罚站，是知道自己该补哪块。';
   }
+  // 备份：把认领数据导出成 JSON，既支持下载，也在弹窗里给出可复制文本（预览面板下载可能被拦）
+  function exportClaims(){
+    const payload={format:'mww-claims-v1',exportedAt:new Date().toISOString(),
+      claims:lsGet(LS_K.claims,{}), claimnote:lsGet(LS_K.claimnote,{})};
+    const text=JSON.stringify(payload,null,2);
+    const box=document.getElementById('modalbox');
+    box.innerHTML='<h2>认领备份</h2><p style="font-size:13px;color:var(--soft)">复制下面全部内容发给小8，或点下载保存。以后重建会自动带回去，不会丢。</p>'
+      +'<textarea class="bkbox" id="bktext" readonly>'+esc(text)+'</textarea>'
+      +'<div class="row"><button class="btn" id="bkcopy">复制全部</button><button class="btn primary" id="bkdl">下载文件</button><button class="btn" id="bkclose">关闭</button></div>';
+    document.getElementById('modal').classList.add('show');
+    const ta=document.getElementById('bktext');
+    document.getElementById('bkcopy').onclick=()=>{ ta.select(); try{document.execCommand('copy'); document.getElementById('bkcopy').textContent='已复制 ✓'}catch(e){document.getElementById('bkcopy').textContent='请手动全选复制'} };
+    document.getElementById('bkdl').onclick=()=>{
+      try{ const blob=new Blob([text],{type:'application/json'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+        a.href=url; a.download='米娅认领记录.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        document.getElementById('bkdl').textContent='已下载 ✓';
+      }catch(e){ document.getElementById('bkdl').textContent='下载被拦，请复制'; }
+    };
+    document.getElementById('bkclose').onclick=()=>document.getElementById('modal').classList.remove('show');
+  }
   function pickClaim(btn){
     const key=btn.dataset.claim;
     setClaim(key,+btn.dataset.ci);
@@ -702,6 +728,7 @@ h3{font-size:15px;margin:0 0 6px}
     const dz=e.target.closest('[data-drill]'); if(dz){ drillRef=dz.dataset.drill; go({tab:'闯关 ⭐'}); startGame(drillRef); return; }
     const da=e.target.closest('[data-alldril]'); if(da){ drillRef=null; render(); return; }
     const sk=e.target.closest('.skillbtn'); if(sk){ startGame(sk.dataset.skill); return; }
+    const bk=e.target.closest('[data-backup]'); if(bk){ exportClaims(); return; }
     if(e.target.matches('textarea,input')) return;
     const a=e.target.closest('[data-note],[data-tab],[data-grp],[data-back],[data-claim],[data-act]'); if(!a||a.dataset.actdo==='note') return; e.preventDefault(); if(a.dataset.back) back(); else if(a.dataset.claim!==undefined){ pickClaim(a); } else if(a.dataset.act!==undefined){ actDo(a.dataset.act,a.dataset.actdo); } else if(a.dataset.note!==undefined) go({note:a.dataset.note}); else if(a.dataset.grp) go({tab:a.dataset.tab,grp:a.dataset.grp}); else go({tab:a.dataset.tab});
   });
